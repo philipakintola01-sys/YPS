@@ -1,0 +1,17 @@
+node_modules/
+.next/
+out/
+build/
+.env*
+*.pem
+*.key
+*.tsbuildinfo
+next-env.d.ts
+*.log
+.agents/
+clone-any-website-skill/
+dummy-target/
+skills-lock.json
+supabase/.temp/
+supabase/.branches/
+test_anon_flow.mjs
