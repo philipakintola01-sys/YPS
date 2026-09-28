@@ -4,7 +4,7 @@ import MinisterCards from '@/app/components/MinisterCards';
 
 export const metadata = {
   title: 'Ministers & Speakers | YPS 1.0',
-  description: 'Meet Apostle Caleb Dada, Main Minister, and Reverend Timothy Adewuyi, Host Pastor, for Young People’s Summit 1.0.',
+  description: 'Meet Apostle Caleb Dada, Main Minister, and Reverend Timothy Adewuyi, Pastor of the Church, for Young People’s Summit 1.0.',
 };
 
 export default function SpeakersPage() {
@@ -42,7 +42,7 @@ export default function SpeakersPage() {
             MINISTERS &amp; SPEAKERS
           </h1>
           <p className="text-white/70 text-base leading-relaxed">
-            Join our Main Minister and Host Pastor for Young People’s Summit 1.0 — A New Covenant.
+            Join our Main Minister and Pastor of the Church for Young People’s Summit 1.0 — A New Covenant.
           </p>
         </div>
 

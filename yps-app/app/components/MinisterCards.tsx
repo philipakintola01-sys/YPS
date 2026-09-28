@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 const ministers = [
   { name: 'Apostle Caleb Dada', role: 'Main Minister', photo: '/ministers/caleb-dada.jpg', position: 'center 65%', accent: 'bg-[#E5A93C]', shadow: 'shadow-[8px_8px_0px_#E5A93C]' },
-  { name: 'Reverend Timothy Adewuyi', role: 'Host Pastor', photo: '/ministers/timothy-adewuyu.jpg', position: 'center center', accent: 'bg-[#EF7AD5]', shadow: 'shadow-[8px_8px_0px_#EF7AD5]' },
+  { name: 'Reverend Timothy Adewuyi', role: 'Pastor of the Church', photo: '/ministers/timothy-adewuyu.jpg', position: 'center center', accent: 'bg-[#EF7AD5]', shadow: 'shadow-[8px_8px_0px_#EF7AD5]' },
 ];
 
 export default function MinisterCards() {
