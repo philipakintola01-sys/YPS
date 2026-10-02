@@ -126,3 +126,15 @@
 .clip-slant-up {
   clip-path: polygon(0 3vw, 100% 0, 100% 100%, 0 100%);
 }
+
+/* Comfortable mobile reading, anchor navigation, and form controls. */
+html { scroll-padding-top: 6rem; }
+body { overflow-wrap: break-word; }
+@media (max-width: 639px) {
+  input, select, textarea { font-size: 16px; }
+  #register input, #register select { min-width: 0; }
+  #register h3 { overflow-wrap: anywhere; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee, .animate-marquee-slow, .animate-marquee-ltr { animation: none; }
+}

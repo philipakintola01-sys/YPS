@@ -55,7 +55,7 @@ export default function FaqPage() {
       </div>
 
       {/* Header */}
-      <header className="border-b-2 border-black bg-[#111836] px-6 py-4">
+      <header className="border-b-2 border-black bg-[#111836] px-4 sm:px-6 py-3 sm:py-4">
         <div className="max-w-6xl mx-auto flex flex-wrap gap-4 items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
             <SiteLogo />
@@ -63,7 +63,7 @@ export default function FaqPage() {
 
           <Link
             href="/#register"
-            className="px-5 py-2.5 bg-[#E5A93C] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#EF7AD5]"
+            className="px-3 sm:px-5 py-3 bg-[#E5A93C] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#EF7AD5]"
           >
             REGISTER FREE
           </Link>
@@ -71,7 +71,7 @@ export default function FaqPage() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto w-full px-4 py-16 space-y-12">
+      <main className="max-w-4xl mx-auto w-full px-5 sm:px-6 py-12 sm:py-16 space-y-12">
         <div className="text-center space-y-4 max-w-2xl mx-auto">
           <div className="inline-flex border-2 border-black bg-[#F3C830] px-4 py-1 text-black font-black text-xs uppercase shadow-[3px_3px_0px_#EF7AD5]">
             COMMON QUESTIONS
@@ -110,7 +110,7 @@ export default function FaqPage() {
           })}
         </div>
 
-        <div className="border-4 border-black bg-[#E5A93C] text-black p-8 text-center space-y-4 shadow-[8px_8px_0px_#EF7AD5]">
+        <div className="border-4 border-black bg-[#E5A93C] text-black p-5 sm:p-8 text-center space-y-4 shadow-[8px_8px_0px_#EF7AD5]">
           <h3 className="font-mortend text-2xl font-black uppercase">
             HAVE MORE QUESTIONS?
           </h3>

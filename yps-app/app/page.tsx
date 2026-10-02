@@ -233,14 +233,14 @@ export default function YPSLandingPage() {
 
       {/* 2. BRUTALIST STICKY HEADER */}
       <header className="sticky top-0 z-40 w-full bg-[#0A0F24]/95 backdrop-blur-md border-b-2 border-black/40 shadow-md">
-        <div className="max-w-[1400px] mx-auto flex items-center justify-between h-[72px] px-4 sm:px-6 lg:px-8">
+        <div className="max-w-[1400px] mx-auto flex items-center justify-between gap-2 h-[72px] px-3 sm:px-6 lg:px-8">
           {/* Brand Logo / Sticker */}
           <Link href="/" className="group flex items-center gap-3">
             <SiteLogo />
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+          <nav className="hidden min-[1440px]:flex items-center gap-5">
             <a href="#about" className="text-[13px] font-black uppercase tracking-wider hover:text-[#E5A93C] transition-colors">
               ABOUT
             </a>
@@ -268,7 +268,7 @@ export default function YPSLandingPage() {
           </nav>
 
           {/* Action Buttons */}
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <button
               onClick={() => {
                 setShowLookup(true);
@@ -282,7 +282,7 @@ export default function YPSLandingPage() {
 
             <a
               href="#register"
-              className="inline-flex items-center justify-center h-11 px-5 sm:px-7 text-xs sm:text-sm font-black uppercase tracking-wider bg-[#E5A93C] text-black border-2 border-black shadow-[4px_4px_0px_0px_#EF7AD5] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#EF7AD5] active:scale-95 transition-all"
+              className="inline-flex items-center justify-center h-11 px-3 sm:px-5 text-[10px] sm:text-sm font-black uppercase tracking-wider bg-[#E5A93C] text-black border-2 border-black shadow-[4px_4px_0px_0px_#EF7AD5] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#EF7AD5] active:scale-95 transition-all"
             >
               REGISTER FREE
             </a>
@@ -290,8 +290,10 @@ export default function YPSLandingPage() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-white border-2 border-white/20 hover:border-white transition-colors cursor-pointer"
+              className="min-[1440px]:hidden p-2 text-white border-2 border-white/20 hover:border-white transition-colors cursor-pointer"
               aria-label="Toggle Navigation Menu"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {mobileMenuOpen ? (
@@ -306,7 +308,7 @@ export default function YPSLandingPage() {
 
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#0A0F24] border-b-2 border-black px-6 py-6 flex flex-col gap-4 animate-in fade-in duration-200">
+          <div id="mobile-navigation" className="min-[1440px]:hidden max-h-[calc(100dvh-72px)] overflow-y-auto bg-[#0A0F24] border-b-2 border-black px-6 py-4 flex flex-col gap-4 animate-in fade-in duration-200">
             <a
               href="#about"
               onClick={() => setMobileMenuOpen(false)}
@@ -398,7 +400,7 @@ export default function YPSLandingPage() {
         <div className="absolute inset-0 z-0 bg-radial from-transparent via-[#0A0F24]/60 to-[#0A0F24]/95 pointer-events-none" />
 
         {/* Hero Content */}
-        <div className="relative z-10 max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8 flex flex-col gap-6">
+        <div className="relative z-10 max-w-[1400px] mx-auto w-full px-5 sm:px-6 lg:px-8 flex flex-col gap-6">
           <div className="max-w-[950px] space-y-5">
             {/* Tilted Sticker: Formerly ATS */}
             <div className="inline-flex -rotate-[2deg] border-2 border-black bg-[#EF7AD5] px-4 py-2 shadow-[4px_4px_0px_0px_#F3C830]">
@@ -433,13 +435,13 @@ export default function YPSLandingPage() {
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <a
                 href="#register"
-                className="inline-flex items-center justify-center whitespace-nowrap h-14 px-8 text-base font-black tracking-wider uppercase bg-[#E5A93C] text-black border-2 border-black shadow-[5px_5px_0px_0px_#EF7AD5] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all active:scale-95"
+                className="inline-flex items-center justify-center min-h-14 py-3 px-5 sm:px-8 text-sm sm:text-base text-center font-black tracking-wider uppercase bg-[#E5A93C] text-black border-2 border-black shadow-[5px_5px_0px_0px_#EF7AD5] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all active:scale-95"
               >
                 REGISTER FOR FREE
               </a>
               <a
                 href="#about"
-                className="inline-flex items-center justify-center whitespace-nowrap h-14 px-8 text-base font-black tracking-wider uppercase bg-[#111836] text-[#E5A93C] border-2 border-[#E5A93C] shadow-[5px_5px_0px_0px_#000] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all active:scale-95"
+                className="inline-flex items-center justify-center min-h-14 py-3 px-5 sm:px-8 text-sm sm:text-base text-center font-black tracking-wider uppercase bg-[#111836] text-[#E5A93C] border-2 border-[#E5A93C] shadow-[5px_5px_0px_0px_#000] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all active:scale-95"
               >
                 LEARN MORE
               </a>
@@ -478,7 +480,7 @@ export default function YPSLandingPage() {
       </section>
 
       {/* 4. CONFIRMED SUMMIT PILLARS (REPLACING INVENTED STATS/CARDS) */}
-      <section className="relative z-20 -mt-10 md:-mt-12 w-full bg-black py-14 px-4 sm:px-6 lg:px-8 border-b-4 border-black">
+      <section className="relative z-20 -mt-10 md:-mt-12 w-full bg-black py-14 px-5 sm:px-6 lg:px-8 border-b-4 border-black">
         <div className="max-w-[1380px] mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {/* Pillar 1 */}
@@ -529,7 +531,7 @@ export default function YPSLandingPage() {
       </section>
 
       {/* 5. ABOUT YPS 1.0 & THEME SECTION */}
-      <section id="about" className="w-full bg-[#111836] py-20 px-4 sm:px-6 lg:px-8 border-b-2 border-black">
+      <section id="about" className="w-full bg-[#111836] py-20 px-5 sm:px-6 lg:px-8 border-b-2 border-black">
         <div className="max-w-[1380px] mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <div className="inline-flex border-2 border-black bg-[#EF7AD5] px-4 py-1.5 shadow-[3px_3px_0px_#F3C830]">
@@ -565,7 +567,7 @@ export default function YPSLandingPage() {
           </div>
 
           {/* Theme & Scriptures Card */}
-          <div id="theme" className="border-4 border-black bg-[#0A0F24] p-8 shadow-[10px_10px_0px_#E5A93C] space-y-6">
+          <div id="theme" className="border-4 border-black bg-[#0A0F24] p-5 sm:p-8 shadow-[10px_10px_0px_#E5A93C] space-y-6">
             <div className="border-b-2 border-white/10 pb-4">
               <span className="text-xs font-black uppercase text-[#E5A93C] block mb-1">
                 SUMMIT THEME
@@ -599,8 +601,8 @@ export default function YPSLandingPage() {
       </section>
 
       {/* 6. ORATORY SESSION SPOTLIGHT */}
-      <section id="oratory" className="w-full bg-[#E5A93C] text-black py-16 px-4 sm:px-6 lg:px-8 border-b-2 border-black">
-        <div className="max-w-[1380px] mx-auto border-4 border-black bg-white p-8 sm:p-12 shadow-[10px_10px_0px_#000]">
+      <section id="oratory" className="w-full bg-[#E5A93C] text-black py-16 px-5 sm:px-6 lg:px-8 border-b-2 border-black">
+        <div className="max-w-[1380px] mx-auto border-4 border-black bg-white p-5 sm:p-12 shadow-[10px_10px_0px_#000]">
           <div className="max-w-3xl space-y-4">
             <div className="inline-flex border-2 border-black bg-[#EF7AD5] px-4 py-1 text-black text-xs font-black uppercase tracking-widest shadow-[3px_3px_0px_#000]">
               SPECIAL PROGRAMME FEATURE
@@ -626,9 +628,9 @@ export default function YPSLandingPage() {
       </section>
 
       {/* 7. TRANSPORTATION CONFIRMATION SECTION */}
-      <section id="transportation" className="w-full bg-[#020101] py-16 px-4 sm:px-6 lg:px-8 border-b-2 border-white/10">
+      <section id="transportation" className="w-full bg-[#020101] py-16 px-5 sm:px-6 lg:px-8 border-b-2 border-white/10">
         <div className="max-w-[1380px] mx-auto">
-          <div className="border-4 border-black bg-[#111836] p-8 sm:p-12 shadow-[10px_10px_0px_#E5A93C] max-w-3xl space-y-4">
+          <div className="border-4 border-black bg-[#111836] p-5 sm:p-12 shadow-[10px_10px_0px_#E5A93C] max-w-3xl space-y-4">
             <div className="inline-flex border-2 border-black bg-[#23C1B4] px-4 py-1 text-black text-xs font-black uppercase tracking-widest shadow-[3px_3px_0px_#000]">
               LOGISTICS ANNOUNCEMENT
             </div>
@@ -652,7 +654,7 @@ export default function YPSLandingPage() {
       </section>
 
       {/* 8. MINISTERS & SPEAKERS */}
-      <section id="speakers" className="w-full bg-[#0A0F24] py-16 px-4 sm:px-6 lg:px-8 border-b-2 border-black">
+      <section id="speakers" className="w-full bg-[#0A0F24] py-16 px-5 sm:px-6 lg:px-8 border-b-2 border-black">
         <div className="max-w-[1380px] mx-auto text-center space-y-6">
           <div className="inline-flex border-2 border-black bg-[#F3C830] px-4 py-1.5 shadow-[3px_3px_0px_#000]">
             <span className="text-xs font-black uppercase tracking-wider text-black">MEET THE MINISTERS</span>
@@ -667,7 +669,7 @@ export default function YPSLandingPage() {
       </section>
 
       {/* 9. SCHEDULE OVERVIEW */}
-      <section id="schedule" className="w-full bg-[#111836] py-16 px-4 sm:px-6 lg:px-8 border-b-2 border-black">
+      <section id="schedule" className="w-full bg-[#111836] py-16 px-5 sm:px-6 lg:px-8 border-b-2 border-black">
         <div className="max-w-[1380px] mx-auto text-center space-y-6">
           <div className="inline-flex border-2 border-black bg-[#EF7AD5] px-4 py-1.5 shadow-[3px_3px_0px_#000]">
             <span className="text-xs font-black uppercase tracking-wider text-black">EVENT OUTLINE</span>
@@ -677,7 +679,7 @@ export default function YPSLandingPage() {
             SUMMIT ITINERARY
           </h2>
 
-          <div className="max-w-2xl mx-auto border-2 border-black bg-[#0A0F24] p-8 shadow-[6px_6px_0px_#E5A93C] text-left space-y-4">
+          <div className="max-w-2xl mx-auto border-2 border-black bg-[#0A0F24] p-5 sm:p-8 shadow-[6px_6px_0px_#E5A93C] text-left space-y-4">
             <div className="border-b border-white/10 pb-3 flex justify-between items-center">
               <span className="font-mortend text-sm uppercase text-[#E5A93C]">START TIME</span>
               <span className="font-mono text-sm font-bold text-white">09:00 AM WAT</span>
@@ -706,7 +708,7 @@ export default function YPSLandingPage() {
       </section>
 
       {/* 10. SPONSORS & PARTNERS (NEUTRAL PLACEHOLDER) */}
-      <section id="sponsors" className="w-full bg-[#020101] py-16 px-4 sm:px-6 lg:px-8 border-b-2 border-white/10">
+      <section id="sponsors" className="w-full bg-[#020101] py-16 px-5 sm:px-6 lg:px-8 border-b-2 border-white/10">
         <div className="max-w-[1380px] mx-auto text-center space-y-6">
           <div className="inline-flex border-2 border-black bg-[#F3C830] px-4 py-1.5 shadow-[3px_3px_0px_#000]">
             <span className="text-xs font-black uppercase tracking-wider text-black">SUPPORT &amp; ALLIANCES</span>
@@ -716,7 +718,7 @@ export default function YPSLandingPage() {
             OUR PARTNERS &amp; SPONSORS
           </h2>
 
-          <div className="max-w-xl mx-auto border-2 border-white/15 bg-[#111836]/60 p-8 text-center space-y-2">
+          <div className="max-w-xl mx-auto border-2 border-white/15 bg-[#111836]/60 p-5 sm:p-8 text-center space-y-2">
             <p className="text-base text-white/80 font-medium">
               Our 2026 partners will be announced soon.
             </p>
@@ -754,7 +756,7 @@ export default function YPSLandingPage() {
       </section>
 
       {/* 12. FULL WORKING REGISTRATION FORM */}
-      <section id="register" className="w-full bg-[#0A0F24] py-24 px-4 sm:px-6 lg:px-8 relative">
+      <section id="register" className="w-full bg-[#0A0F24] py-16 sm:py-24 px-5 sm:px-6 lg:px-8 relative">
         <div className="max-w-3xl mx-auto w-full">
           {/* Section Header */}
           <div className="text-center mb-12 space-y-3">
@@ -771,8 +773,8 @@ export default function YPSLandingPage() {
 
           {/* Success Result Confirmation */}
           {successResult && (
-            <div className="border-4 border-black bg-[#F3C830] text-black p-8 shadow-[12px_12px_0px_#EF7AD5] mb-12 space-y-6">
-              <div className="flex items-center justify-between border-b-2 border-black pb-4">
+            <div className="border-4 border-black bg-[#F3C830] text-black p-5 sm:p-8 shadow-[12px_12px_0px_#EF7AD5] mb-12 space-y-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-black pb-4">
                 <div>
                   <span className="bg-black text-[#F3C830] text-[11px] font-black uppercase px-3 py-1">
                     REGISTRATION CONFIRMED ✓
@@ -802,7 +804,7 @@ export default function YPSLandingPage() {
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-medium text-black/80">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 break-words text-sm font-medium text-black/80">
                 <div>
                   <span className="font-bold block text-black">PHONE:</span>
                   {successResult.phone_number}
@@ -811,7 +813,7 @@ export default function YPSLandingPage() {
                   <span className="font-bold block text-black">EMAIL:</span>
                   {successResult.email}
                 </div>
-                <div className="col-span-2 sm:col-span-1">
+                <div className="col-span-1">
                   <span className="font-bold block text-black">CHURCH / ORG:</span>
                   {successResult.church_organisation}
                 </div>
@@ -832,7 +834,7 @@ export default function YPSLandingPage() {
               <h3 className="font-mortend text-xl font-bold uppercase">
                 A RECORD ALREADY EXISTS FOR THIS PHONE OR EMAIL
               </h3>
-              <div className="p-4 bg-black text-white border-2 border-black flex items-center justify-between">
+              <div className="p-4 bg-black text-white border-2 border-black flex flex-wrap gap-4 items-center justify-between">
                 <div>
                   <p className="text-[10px] text-[#E5A93C] uppercase">YOUR PASS ID</p>
                   <p className="font-mortend text-2xl font-black">{existingResult.id}</p>
@@ -848,7 +850,7 @@ export default function YPSLandingPage() {
           )}
 
           {/* Form Card */}
-          <div className="border-4 border-black bg-[#111836] p-6 sm:p-10 shadow-[12px_12px_0px_#E5A93C]">
+          <div className="border-4 border-black bg-[#111836] p-4 sm:p-10 shadow-[12px_12px_0px_#E5A93C]">
             <form onSubmit={handleSubmit} className="space-y-6">
               {errorMsg && (
                 <div className="p-4 bg-red-600/20 border-2 border-red-500 text-red-200 text-sm font-bold">
@@ -954,7 +956,7 @@ export default function YPSLandingPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full h-16 bg-[#E5A93C] hover:bg-[#F3C830] text-black font-mortend text-base sm:text-lg font-black uppercase tracking-wider border-2 border-black shadow-[6px_6px_0px_#EF7AD5] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_#EF7AD5] active:scale-98 transition-all cursor-pointer disabled:opacity-50"
+                className="w-full min-h-16 h-auto px-3 py-4 leading-relaxed bg-[#E5A93C] hover:bg-[#F3C830] text-black font-mortend text-base sm:text-lg font-black uppercase tracking-wider border-2 border-black shadow-[6px_6px_0px_#EF7AD5] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_#EF7AD5] active:scale-98 transition-all cursor-pointer disabled:opacity-50"
               >
                 {submitting ? 'RESERVING PASS...' : 'COMPLETE FREE REGISTRATION →'}
               </button>
@@ -975,8 +977,8 @@ export default function YPSLandingPage() {
 
       {/* 13. FIND MY REGISTRATION MODAL */}
       {showLookup && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="w-full max-w-md border-4 border-black bg-[#111836] p-6 sm:p-8 shadow-[12px_12px_0px_#E5A93C] animate-in zoom-in-95 duration-150">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-5">
+          <div className="w-full max-w-md max-h-[calc(100dvh-40px)] overflow-y-auto border-4 border-black bg-[#111836] p-6 sm:p-8 shadow-[12px_12px_0px_#E5A93C] animate-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between border-b-2 border-white/10 pb-4 mb-6">
               <h3 className="font-mortend text-lg font-black uppercase text-[#E5A93C]">
                 RECOVER SUMMIT ID
@@ -1037,7 +1039,7 @@ export default function YPSLandingPage() {
       )}
 
       {/* 14. FOOTER */}
-      <footer className="w-full bg-black text-white border-t-4 border-black px-4 sm:px-6 lg:px-8 pt-16 pb-20">
+      <footer className="w-full bg-black text-white border-t-4 border-black px-5 sm:px-6 lg:px-8 pt-16 pb-20">
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-12 border-b border-white/10">
           {/* Brand & Purpose */}
           <div className="space-y-4">

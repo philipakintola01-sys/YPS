@@ -17,7 +17,7 @@ export default function SpeakersPage() {
       </div>
 
       {/* Header */}
-      <header className="border-b-2 border-black bg-[#111836] px-6 py-4">
+      <header className="border-b-2 border-black bg-[#111836] px-4 sm:px-6 py-3 sm:py-4">
         <div className="max-w-6xl mx-auto flex flex-wrap gap-4 items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
             <SiteLogo />
@@ -25,7 +25,7 @@ export default function SpeakersPage() {
 
           <Link
             href="/#register"
-            className="px-5 py-2.5 bg-[#E5A93C] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#EF7AD5]"
+            className="px-3 sm:px-5 py-3 bg-[#E5A93C] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#EF7AD5]"
           >
             REGISTER FREE
           </Link>
@@ -33,7 +33,7 @@ export default function SpeakersPage() {
       </header>
 
       {/* Main Section */}
-      <main className="max-w-4xl mx-auto w-full px-4 py-20 space-y-12 text-center">
+      <main className="max-w-4xl mx-auto w-full px-5 sm:px-6 py-12 sm:py-20 space-y-12 text-center">
         <div className="space-y-4 max-w-2xl mx-auto">
           <div className="inline-flex border-2 border-black bg-[#F3C830] px-4 py-1 text-black font-black text-xs uppercase shadow-[3px_3px_0px_#EF7AD5]">
             MEET THE MINISTERS
@@ -51,7 +51,7 @@ export default function SpeakersPage() {
         <div className="pt-6">
           <Link
             href="/#register"
-            className="inline-flex items-center justify-center h-14 px-8 text-xs font-black uppercase tracking-wider bg-[#E5A93C] text-black border-2 border-black shadow-[4px_4px_0px_#EF7AD5] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
+            className="inline-flex items-center justify-center min-h-14 py-3 px-5 sm:px-8 text-center text-xs font-black uppercase tracking-wider bg-[#E5A93C] text-black border-2 border-black shadow-[4px_4px_0px_#EF7AD5] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
           >
             REGISTER FREE FOR YPS 1.0 &rarr;
           </Link>

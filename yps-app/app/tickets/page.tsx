@@ -16,7 +16,7 @@ export default function TicketsPage() {
       </div>
 
       {/* Header */}
-      <header className="border-b-2 border-black bg-[#111836] px-6 py-4">
+      <header className="border-b-2 border-black bg-[#111836] px-4 sm:px-6 py-3 sm:py-4">
         <div className="max-w-6xl mx-auto flex flex-wrap gap-4 items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
             <SiteLogo />
@@ -24,7 +24,7 @@ export default function TicketsPage() {
 
           <Link
             href="/#register"
-            className="px-5 py-2.5 bg-[#E5A93C] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#EF7AD5]"
+            className="px-3 sm:px-5 py-3 bg-[#E5A93C] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#EF7AD5]"
           >
             REGISTER FREE
           </Link>
@@ -32,7 +32,7 @@ export default function TicketsPage() {
       </header>
 
       {/* Main Section */}
-      <main className="max-w-3xl mx-auto w-full px-4 py-16">
+      <main className="max-w-3xl mx-auto w-full px-5 sm:px-6 py-12 sm:py-16">
         <div className="text-center space-y-4 mb-12">
           <div className="inline-flex border-2 border-black bg-[#EF7AD5] px-4 py-1 text-black font-black text-xs uppercase shadow-[3px_3px_0px_#F3C830]">
             FREE REGISTRATION
@@ -47,7 +47,7 @@ export default function TicketsPage() {
         </div>
 
         {/* Pass Card */}
-        <div className="border-4 border-black bg-[#111836] p-8 shadow-[12px_12px_0px_#E5A93C] space-y-8">
+        <div className="border-4 border-black bg-[#111836] p-5 sm:p-8 shadow-[12px_12px_0px_#E5A93C] space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-white/10 pb-6 gap-4">
             <div>
               <span className="bg-[#F3C830] text-black font-black text-xs uppercase px-3 py-1 border border-black inline-block mb-2">
@@ -92,7 +92,7 @@ export default function TicketsPage() {
           <div className="pt-6 border-t-2 border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
             <Link
               href="/#register"
-              className="w-full sm:w-auto h-14 px-8 bg-[#E5A93C] hover:bg-[#F3C830] text-black font-mortend font-black text-sm uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_#EF7AD5] flex items-center justify-center transition-all"
+              className="w-full sm:w-auto min-h-14 py-3 px-5 sm:px-8 text-center bg-[#E5A93C] hover:bg-[#F3C830] text-black font-mortend font-black text-sm uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_#EF7AD5] flex items-center justify-center transition-all"
             >
               REGISTER ON HOMEPAGE →
             </Link>
