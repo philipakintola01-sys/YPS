@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 
@@ -47,10 +47,45 @@ export default function CheckInPage() {
   const [actionError, setActionError] = useState<string | null>(null);
 
   // Backup Search state
-  const [activeTab, setActiveTab] = useState<'id' | 'search'>('id');
+  const [activeTab, setActiveTab] = useState<'id' | 'search'>('search');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<RegistrationRecord[]>([]);
-  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(true);
+  const [listError, setListError] = useState<string | null>(null);
+  const [countError, setCountError] = useState<string | null>(null);
+  const [countsReady, setCountsReady] = useState(false);
+  const [page, setPage] = useState(0);
+  const [filter, setFilter] = useState('');
+  const [resultCount, setResultCount] = useState(0);
+  const listRequest = useRef(0);
+  const pageSize = 25;
+  const loadAttendees = useCallback(async () => {
+    if (!currentUser) return;
+    const request = ++listRequest.current;
+    setSearchLoading(true);
+    setListError(null);
+    try {
+      let query = supabase.from('registrations').select('*', { count: 'exact' });
+      const text = filter.replace(/[^a-zA-Z0-9 @.+-]/g, ' ').trim();
+      if (text) query = query.or(`full_name.ilike.%${text}%,phone_number.ilike.%${text}%,email.ilike.%${text}%,registration_id.ilike.%${text}%`);
+      const { data, count, error } = await query.order('registered_at', { ascending: false }).order('id').range(page * pageSize, (page + 1) * pageSize - 1);
+      if (request !== listRequest.current) return;
+      if (error) throw error;
+      setSearchResults(data || []);
+      setResultCount(count ?? 0);
+    } catch (error) {
+      if (request !== listRequest.current) return;
+      setSearchResults([]);
+      setListError(error instanceof Error ? error.message : 'Unable to load attendees. Check your staff permissions and connection.');
+    } finally {
+      if (request === listRequest.current) setSearchLoading(false);
+    }
+  }, [supabase, currentUser, filter, page]);
+  useEffect(() => {
+    void loadAttendees();
+    const timer = setInterval(() => void loadAttendees(), 30000);
+    return () => { clearInterval(timer); listRequest.current++; };
+  }, [loadAttendees]);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -100,15 +135,22 @@ export default function CheckInPage() {
   // 2. Fetch Initial Counts & Subscribe to Realtime Updates
   useEffect(() => {
     async function fetchCounts() {
-      const { count: total } = await supabase
+      const { count: total, error: totalError } = await supabase
         .from('registrations')
         .select('*', { count: 'exact', head: true });
 
-      const { count: checkedIn } = await supabase
+      const { count: checkedIn, error: checkedError } = await supabase
         .from('registrations')
         .select('*', { count: 'exact', head: true })
         .eq('checkin_status', 'checked_in');
 
+      if (totalError || checkedError) {
+        setCountError('Attendance totals could not be loaded. Check your staff permissions and connection.');
+        setCountsReady(false);
+        return;
+      }
+      setCountError(null);
+      setCountsReady(true);
       setTotalRegistered(total || 0);
       setTotalCheckedIn(checkedIn || 0);
     }
@@ -202,6 +244,7 @@ export default function CheckInPage() {
 
       if (result.record) {
         setActiveRecord(result.record);
+        void loadAttendees();
         // Also update in backup search results if open
         setSearchResults((prev) =>
           prev.map((item) => (item.registration_id === regId ? result.record : item))
@@ -214,29 +257,11 @@ export default function CheckInPage() {
     }
   };
 
-  // 5. Backup Search Handler
-  const handleBackupSearch = async (e: React.FormEvent) => {
+  const handleBackupSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!searchQuery.trim()) return;
-
-    setSearchLoading(true);
-    try {
-      const query = searchQuery.trim();
-      const { data, error } = await supabase
-        .from('registrations')
-        .select('*')
-        .or(`full_name.ilike.%${query}%,phone_number.ilike.%${query}%,email.ilike.%${query}%`)
-        .order('full_name', { ascending: true })
-        .limit(20);
-
-      if (data) {
-        setSearchResults(data as RegistrationRecord[]);
-      }
-    } catch (err) {
-      console.error('Backup search error:', err);
-    } finally {
-      setSearchLoading(false);
-    }
+    setPage(0);
+    setFilter(searchQuery.trim());
+    if (page === 0 && filter === searchQuery.trim()) void loadAttendees();
   };
 
   // Handle Logout
@@ -290,18 +315,20 @@ export default function CheckInPage() {
               Live Event Attendance Counter
             </div>
             <div className="text-3xl sm:text-4xl font-extrabold tracking-tight">
-              {totalCheckedIn} <span className="text-xl sm:text-2xl font-normal text-blue-200">/ {totalRegistered} Checked In</span>
+              {countsReady ? totalCheckedIn : "—"} <span className="text-xl sm:text-2xl font-normal text-blue-200">/ {countsReady ? totalRegistered : "—"} Checked In</span>
             </div>
           </div>
 
           <div className="text-right">
             <div className="text-2xl font-bold text-amber-400">
-              {totalRegistered > 0 ? Math.round((totalCheckedIn / totalRegistered) * 100) : 0}%
+              {countsReady ? `${totalRegistered > 0 ? Math.round((totalCheckedIn / totalRegistered) * 100) : 0}%` : '—'}
             </div>
             <div className="text-xs text-blue-200">Attendance Rate</div>
           </div>
         </div>
 
+        {countError && <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-4 text-red-800">{countError}</p>}
+        {actionError && activeTab === 'search' && <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-4 text-red-800">{actionError}</p>}
         {/* Tab Navigation (Primary 4-Digit Code vs Backup Search) */}
         <div className="flex border-b border-gray-300 gap-2">
           <button
@@ -323,7 +350,7 @@ export default function CheckInPage() {
                 : 'border-transparent text-gray-600 hover:text-gray-900'
             }`}
           >
-            🔍 Backup Search (Name / Phone)
+            Attendees & Search
           </button>
         </div>
 
@@ -447,6 +474,11 @@ export default function CheckInPage() {
         {/* 2. BACKUP CHECK-IN METHOD: SEARCH BY NAME OR PHONE (REQ-6.2) */}
         {activeTab === 'search' && (
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 space-y-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-xl font-bold">Attendees</h2>
+              <button onClick={() => void loadAttendees()} disabled={searchLoading} className="text-blue-900 underline disabled:opacity-50">Refresh list</button>
+            </div>
+            <p className="text-sm text-gray-600">All registrations appear here automatically. Refreshes every 30 seconds.</p>
             <form onSubmit={handleBackupSearch} className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
@@ -464,6 +496,8 @@ export default function CheckInPage() {
               </button>
             </form>
 
+            {listError && <p role="alert" className="bg-red-50 p-4 text-red-800 rounded-lg">{listError}</p>}
+            {searchLoading && <p role="status">Loading attendees…</p>}
             {/* Results Table */}
             {searchResults.length > 0 ? (
               <div className="border border-gray-200 rounded-lg overflow-x-auto">
@@ -500,6 +534,7 @@ export default function CheckInPage() {
                           {rec.checkin_status === 'not_checked_in' ? (
                             <button
                               onClick={() => handleCheckInAction(rec.registration_id, 'checkin')}
+                              disabled={actionLoading || rec.registration_status !== 'registered'}
                               className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-3 py-1.5 rounded transition-colors cursor-pointer"
                             >
                               Check In
@@ -516,12 +551,19 @@ export default function CheckInPage() {
                 </table>
               </div>
             ) : (
-              searchQuery && !searchLoading && (
+              !listError && !searchLoading && (
                 <div className="text-center py-6 text-gray-500 text-sm">
-                  No matching attendee records found for "{searchQuery}".
+                  {filter ? `No attendees match "${filter}".` : "No registrations yet."}
                 </div>
               )
             )}
+            {!listError && <div className="flex flex-wrap items-center justify-between gap-3 text-sm">
+              <span>{resultCount} attendee{resultCount === 1 ? '' : 's'} · Page {page + 1}</span>
+              <div className="flex gap-4">
+                <button disabled={page === 0 || searchLoading} onClick={() => setPage(p => p - 1)} className="underline disabled:opacity-40">Previous</button>
+                <button disabled={(page + 1) * pageSize >= resultCount || searchLoading} onClick={() => setPage(p => p + 1)} className="underline disabled:opacity-40">Next</button>
+              </div>
+            </div>}
           </div>
         )}
       </main>
