@@ -33,6 +33,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized. Staff login required.' }, { status: 401 });
     }
 
+    const { data: staff } = await supabase.from('committee_users').select('role').eq('user_id', user.id).single();
+    if (!staff || !['admin', 'registration_team'].includes(staff.role)) {
+      return NextResponse.json({ error: 'Authorized staff profile required.' }, { status: 403 });
+    }
     const body = await req.json();
     const { registration_id, action } = body;
 
@@ -52,6 +56,7 @@ export async function POST(req: NextRequest) {
           checked_in_by: user.id, // Strictly set from authenticated session server-side
         })
         .eq('registration_id', registration_id)
+        .eq('registration_status', 'registered')
         .select('*')
         .single();
 
@@ -83,6 +88,7 @@ export async function POST(req: NextRequest) {
           checked_in_by: null,
         })
         .eq('registration_id', registration_id)
+        .eq('registration_status', 'registered')
         .select('*')
         .single();
 

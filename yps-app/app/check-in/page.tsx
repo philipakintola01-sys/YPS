@@ -69,17 +69,22 @@ export default function CheckInPage() {
         }
 
         // Fetch committee user role
-        const { data: commUser } = await supabase
+        const { data: commUser, error: profileError } = await supabase
           .from('committee_users')
           .select('name, role')
           .eq('user_id', user.id)
           .single();
 
+        if (profileError || !commUser || !['admin', 'registration_team'].includes(commUser.role)) {
+          await supabase.auth.signOut();
+          router.replace('/check-in/login');
+          return;
+        }
         setCurrentUser({
           id: user.id,
           email: user.email,
           name: commUser?.name || user.email?.split('@')[0] || 'Staff Member',
-          role: commUser?.role || 'registration_team',
+          role: commUser.role,
         });
       } catch (err) {
         console.error('Auth check error:', err);
@@ -108,7 +113,9 @@ export default function CheckInPage() {
       setTotalCheckedIn(checkedIn || 0);
     }
 
+    if (!currentUser) return;
     fetchCounts();
+    const refreshInterval = setInterval(fetchCounts, 30000);
 
     // Setup Supabase Realtime Subscription on registrations table
     const channel = supabase
@@ -129,9 +136,10 @@ export default function CheckInPage() {
       .subscribe();
 
     return () => {
+      clearInterval(refreshInterval);
       supabase.removeChannel(channel);
     };
-  }, [supabase, activeRecord]);
+  }, [supabase, activeRecord, currentUser]);
 
   // 3. Auto-trigger Primary Lookup on 4th Character Entry
   useEffect(() => {
@@ -237,7 +245,7 @@ export default function CheckInPage() {
     router.push('/check-in/login');
   };
 
-  if (authLoading) {
+  if (authLoading || !currentUser) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
         <div className="text-gray-600 font-medium text-sm">Verifying staff credentials...</div>
@@ -339,7 +347,7 @@ export default function CheckInPage() {
                   onChange={(e) => setSuffix(e.target.value.toUpperCase())}
                   placeholder="4821"
                   autoFocus
-                  className="w-full bg-white border-2 border-blue-900 rounded-lg px-4 py-3 text-2xl font-mono font-bold text-blue-950 uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="min-w-0 w-full bg-white border-2 border-blue-900 rounded-lg px-4 py-3 text-2xl font-mono font-bold text-blue-950 uppercase tracking-widest focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <p className="text-xs text-gray-500 mt-2">
@@ -439,7 +447,7 @@ export default function CheckInPage() {
         {/* 2. BACKUP CHECK-IN METHOD: SEARCH BY NAME OR PHONE (REQ-6.2) */}
         {activeTab === 'search' && (
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 space-y-6">
-            <form onSubmit={handleBackupSearch} className="flex gap-2">
+            <form onSubmit={handleBackupSearch} className="flex flex-col sm:flex-row gap-2">
               <input
                 type="text"
                 value={searchQuery}
@@ -458,7 +466,7 @@ export default function CheckInPage() {
 
             {/* Results Table */}
             {searchResults.length > 0 ? (
-              <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <div className="border border-gray-200 rounded-lg overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead className="bg-gray-100 text-gray-700 text-xs font-bold uppercase border-b border-gray-200">
                     <tr>

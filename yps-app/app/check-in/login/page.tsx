@@ -21,7 +21,7 @@ export default function CheckInLoginPage() {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email: email.trim(),
-        password: password.trim(),
+        password,
       });
 
       if (error) {
@@ -29,11 +29,16 @@ export default function CheckInLoginPage() {
       }
 
       if (data.user) {
+        const { data: profile, error: profileError } = await supabase.from('committee_users').select('role').eq('user_id', data.user.id).single();
+        if (profileError || !profile || !['admin', 'registration_team'].includes(profile.role)) {
+          await supabase.auth.signOut();
+          throw new Error('This account does not have an authorized staff profile. Contact the event administrator.');
+        }
         router.push('/check-in');
         router.refresh();
       }
-    } catch (err: any) {
-      setErrorMsg(err.message || 'Login failed. Please check your credentials.');
+    } catch (err: unknown) {
+      setErrorMsg(err instanceof Error ? err.message : 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
@@ -47,10 +52,10 @@ export default function CheckInLoginPage() {
             YPS 2026 Committee Access
           </div>
           <h1 className="text-2xl font-serif-title font-bold text-white">
-            Staff Check-in Login
+            Admin & Staff Sign In
           </h1>
           <p className="text-xs text-[#9CA3AF] mt-1">
-            Enter your committee member account details to access event-day check-in.
+            Enter your committee member account details to monitor registrations and manage event-day check-in.
           </p>
         </div>
 
@@ -62,10 +67,12 @@ export default function CheckInLoginPage() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-xs font-display-condensed text-[#9CA3AF] uppercase tracking-wider mb-1">
+            <label htmlFor="staff-email" className="block text-xs font-display-condensed text-[#9CA3AF] uppercase tracking-wider mb-1">
               Email Address
             </label>
             <input
+              id="staff-email"
+              autoComplete="username"
               type="email"
               required
               value={email}
@@ -76,10 +83,12 @@ export default function CheckInLoginPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-display-condensed text-[#9CA3AF] uppercase tracking-wider mb-1">
+            <label htmlFor="staff-password" className="block text-xs font-display-condensed text-[#9CA3AF] uppercase tracking-wider mb-1">
               Password
             </label>
             <input
+              id="staff-password"
+              autoComplete="current-password"
               type="password"
               required
               value={password}

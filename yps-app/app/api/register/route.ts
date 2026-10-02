@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     const cleanedEmail = email.trim().toLowerCase();
 
     // Perform registration insert
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('registrations')
       .insert({
         full_name: full_name.trim(),
@@ -48,9 +48,7 @@ export async function POST(req: NextRequest) {
         gender: gender || null,
         registration_status: 'registered',
         checkin_status: 'not_checked_in',
-      })
-      .select('registration_id, full_name, phone_number, email, church_organisation, registered_at')
-      .single();
+      });
 
     if (error) {
       // Catch Unique Constraint Violations (code 23505) for duplicate phone or email
@@ -71,7 +69,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
-    return NextResponse.json({ success: true, record: data });
+    const { data: registrationId, error: lookupError } = await supabase.rpc('lookup_registration_id', {
+      p_phone: cleanedPhone,
+      p_email: cleanedEmail,
+    });
+    if (lookupError || !registrationId) {
+      return NextResponse.json({ error: 'Registration saved, but your pass could not be retrieved. Use Find My ID before registering again.' }, { status: 500 });
+    }
+    return NextResponse.json({ success: true, record: {
+      registration_id: registrationId,
+      full_name: full_name.trim(), phone_number: cleanedPhone, email: cleanedEmail,
+      church_organisation: church_organisation.trim(), registered_at: new Date().toISOString(),
+    } });
   } catch (err: any) {
     return NextResponse.json({ error: err.message || 'Internal server error' }, { status: 500 });
   }
