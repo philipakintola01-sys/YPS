@@ -630,7 +630,7 @@ export default function YPSLandingPage() {
       {/* 7. TRANSPORTATION CONFIRMATION SECTION */}
       <section id="transportation" className="w-full bg-[#020101] py-16 px-5 sm:px-6 lg:px-8 border-b-2 border-white/10">
         <div className="max-w-[1380px] mx-auto">
-          <div className="border-4 border-black bg-[#111836] p-5 sm:p-12 shadow-[10px_10px_0px_#E5A93C] max-w-3xl space-y-4">
+          <div className="border-4 border-black bg-[#111836] p-5 sm:p-12 shadow-[10px_10px_0px_#E5A93C] max-w-3xl mx-auto text-center space-y-4">
             <div className="inline-flex border-2 border-black bg-[#23C1B4] px-4 py-1 text-black text-xs font-black uppercase tracking-widest shadow-[3px_3px_0px_#000]">
               LOGISTICS ANNOUNCEMENT
             </div>
