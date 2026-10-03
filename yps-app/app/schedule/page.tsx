@@ -103,11 +103,11 @@ export default function SchedulePage() {
                   Oratory Session
                 </h3>
                 <p className="text-xs text-white/70 mt-1">
-                  Special oratory segment for young voices. Session details and speaker guidelines to be announced.
+                  Stage 2: Impromptu speaking at 8:30 a.m. WAT. Stage 3: Grand finale at 9:20 a.m. WAT. Stage 1 video submissions close on 20 October 2026.
                 </p>
               </div>
               <span className="text-xs font-mono font-bold text-[#23C1B4] bg-black px-3 py-1 border border-white/20 self-start sm:self-center">
-                DETAILS PENDING
+                8:30 AM / 9:20 AM
               </span>
             </div>
           </div>

@@ -34,7 +34,7 @@ export default function FaqPage() {
     },
     {
       q: 'What is the Oratory Session?',
-      a: 'There will be an Oratory Session at YPS 1.0 for young people. Specific participation criteria, guidelines, and topic details are currently being finalized and will be announced soon.',
+      a: 'The YPS 1.0 Oratory Competition begins with a 2-minute video on “What Does It Mean to Be a Young Christian in Today’s World?” Submit by 20 October 2026. Stage 2 (impromptu speaking) is on 7 November at 8:30 a.m. WAT, followed by the grand finale at 9:20 a.m. Prizes: ₦150,000, ₦100,000, and ₦50,000 for first, second, and third place. The submission link will be published shortly.',
     },
     {
       q: 'How do I check in on the summit day?',

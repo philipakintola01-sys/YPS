@@ -512,7 +512,7 @@ export default function YPSLandingPage() {
               </span>
               <h3 className="font-mortend text-xl font-black uppercase">ORATORY SESSION</h3>
               <p className="text-xs font-bold text-black/80 mt-2 leading-relaxed">
-                Special session confirmed for YPS 1.0. Guidelines and session details are currently being finalized.
+                Submit a 2-minute video by 20 October 2026. Compete for prizes of ₦150,000, ₦100,000, and ₦50,000.
               </p>
             </div>
 
@@ -602,28 +602,32 @@ export default function YPSLandingPage() {
 
       {/* 6. ORATORY SESSION SPOTLIGHT */}
       <section id="oratory" className="w-full bg-[#E5A93C] text-black py-16 px-5 sm:px-6 lg:px-8 border-b-2 border-black">
-        <div className="max-w-[1380px] mx-auto border-4 border-black bg-white p-5 sm:p-12 shadow-[10px_10px_0px_#000]">
-          <div className="max-w-3xl space-y-4">
-            <div className="inline-flex border-2 border-black bg-[#EF7AD5] px-4 py-1 text-black text-xs font-black uppercase tracking-widest shadow-[3px_3px_0px_#000]">
-              SPECIAL PROGRAMME FEATURE
-            </div>
-
-            <h2 className="font-mortend text-2xl sm:text-4xl font-black uppercase text-black">
-              YPS 1.0 ORATORY SESSION
-            </h2>
-
-            <p className="text-base sm:text-lg font-medium text-black/90 leading-relaxed">
-              We are excited to host an <strong>Oratory Session</strong> as part of the Young People&apos;s Summit 1.0 programme.
-              This platform provides an opportunity for young voices to express truth, conviction, and articulate thought.
-            </p>
-
-            <div className="p-4 bg-[#FFE08C] border-2 border-black text-sm font-bold text-black flex items-center gap-3">
-              <span className="text-xl">📢</span>
-              <span>
-                Session guidelines, speaking topics, and participation instructions are currently being finalized and will be published here soon.
-              </span>
+        <div className="max-w-5xl mx-auto text-center space-y-8">
+          <p className="font-black uppercase tracking-widest text-sm">Young People’s Summit 2026</p>
+          <h2 className="font-mortend text-2xl sm:text-4xl font-black uppercase">YPS 1.0 Oratory Competition</h2>
+          <div className="grid md:grid-cols-3 gap-5 text-left">
+            {[
+              ['Stage 1', '2-minute video submission', 'Deadline: 20 October 2026'],
+              ['Stage 2', 'Impromptu speaking', '7 November 2026 · 8:30 a.m. WAT'],
+              ['Stage 3', 'Grand finale', '7 November 2026 · 9:20 a.m. WAT'],
+            ].map(([stage, title, date]) => <article key={stage} className="bg-[#111836] text-white border-4 border-black p-5 shadow-[5px_5px_0px_#000]">
+              <p className="text-[#E5A93C] font-black uppercase">{stage}</p>
+              <h3 className="text-xl font-bold mt-2">{title}</h3>
+              <p className="mt-3 text-sm">{date}</p>
+            </article>)}
+          </div>
+          <div className="bg-[#0A0F24] text-white border-4 border-black p-5 sm:p-8 space-y-4">
+            <p className="text-[#E5A93C] font-black uppercase">Stage 1 topic</p>
+            <h3 className="text-xl sm:text-2xl font-bold">“What Does It Mean to Be a Young Christian in Today’s World?”</h3>
+            <div className="flex flex-wrap justify-center gap-6 pt-4">
+              <p><strong className="text-[#E5A93C] text-2xl">₦150,000</strong><br />1st place</p>
+              <p><strong className="text-[#E5A93C] text-2xl">₦100,000</strong><br />2nd place</p>
+              <p><strong className="text-[#E5A93C] text-2xl">₦50,000</strong><br />3rd place</p>
             </div>
           </div>
+          <p className="font-bold">Great Impact Baptist Church, Bariga, Lagos. Oratory participants: Stage 2 begins at 8:30 a.m., before the summit’s 9:00 a.m. start.</p>
+          <p className="text-sm font-semibold">The video submission link will be published here shortly.</p>
+          <a href="/oratory-poster.png" target="_blank" rel="noopener noreferrer" className="inline-block font-black underline">View competition poster →</a>
         </div>
       </section>
 
@@ -694,7 +698,7 @@ export default function YPSLandingPage() {
             </div>
 
             <p className="text-xs text-white/70 pt-2 leading-relaxed">
-              The full programme schedule will be published once all session blocks, Oratory details, and session timings are officially confirmed.
+              Oratory Stage 2 starts at 8:30 a.m.; the grand finale is at 9:20 a.m. on 7 November. Further programme details will be announced.
             </p>
 
             <Link
