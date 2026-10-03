@@ -626,7 +626,19 @@ export default function YPSLandingPage() {
             </div>
           </div>
           <p className="font-bold">Great Impact Baptist Church, Bariga, Lagos. Oratory participants: Stage 2 begins at 8:30 a.m., before the summit’s 9:00 a.m. start.</p>
-          <p className="text-sm font-semibold">The video submission link will be published here shortly.</p>
+          <div className="bg-white/90 border-4 border-black p-5 sm:p-8 text-left space-y-3">
+            <h3 className="text-xl font-black uppercase">Competition rules</h3>
+            <ul className="list-disc pl-5 space-y-2 text-sm sm:text-base">
+              <li>Maximum of 2 contestants per church or fellowship.</li>
+              <li>Submit a 2-minute Stage 1 video by 20 October 2026. No slides or visual aids at any stage.</li>
+              <li>10 contestants advance to Stage 2; 5 advance to the grand finale.</li>
+              <li>Keep strictly to the allocated speaking time. Stage 2 and Stage 3 information will be sent to qualifying candidates.</li>
+              <li>The five grand finale topics will be released ahead of the event. Each finalist’s topic will be assigned by random draw on the day.</li>
+              <li>Judges will use the published criteria for each stage. Their decision is final.</li>
+            </ul>
+          </div>
+          <a href="https://forms.gle/gVo24PTSzS4WwDh26" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center border-4 border-black bg-[#111836] text-white px-6 py-4 font-black uppercase shadow-[5px_5px_0px_#000] hover:bg-[#0A0F24]">Register &amp; submit your video →</a>
+          <p className="text-sm">Oratory entries use a separate form from free summit registration.</p>
           <a href="/oratory-poster.png" target="_blank" rel="noopener noreferrer" className="inline-block font-black underline">View competition poster →</a>
         </div>
       </section>
