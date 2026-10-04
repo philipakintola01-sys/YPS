@@ -56,30 +56,19 @@ export default function YPSLandingPage() {
   const [lookupResult, setLookupResult] = useState<{ found: boolean; id?: string; message?: string } | null>(null);
 
   // Countdown State for Saturday, Nov 7, 2026, 09:00 AM WAT
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+  const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number } | null>(null);
 
   useEffect(() => {
     const targetDate = new Date('2026-11-07T09:00:00+01:00').getTime();
-
     const updateCountdown = () => {
-      const now = new Date().getTime();
-      const difference = targetDate - now;
-
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        });
-      }
+      const difference = Math.max(0, targetDate - Date.now());
+      setTimeLeft({
+        days: Math.floor(difference / 86400000),
+        hours: Math.floor(difference / 3600000) % 24,
+        minutes: Math.floor(difference / 60000) % 60,
+        seconds: Math.floor(difference / 1000) % 60,
+      });
     };
-
     updateCountdown();
     const interval = setInterval(updateCountdown, 1000);
     return () => clearInterval(interval);
@@ -222,7 +211,7 @@ export default function YPSLandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0F24] text-white flex flex-col selection:bg-[#E5A93C] selection:text-black">
+    <div className="min-h-screen overflow-x-clip bg-[#0A0F24] text-white flex flex-col selection:bg-[#E5A93C] selection:text-black">
       {/* 1. TOP ANNOUNCEMENT & VENUE BANNER */}
       <div className="w-full bg-black border-b border-white/10 px-4 py-2 text-center text-[12px] sm:text-[13px] font-bold text-white/90 z-50">
         <span className="text-[#E5A93C] uppercase tracking-wider font-extrabold mr-2">Summit Venue:</span>
@@ -233,22 +222,19 @@ export default function YPSLandingPage() {
 
       {/* 2. BRUTALIST STICKY HEADER */}
       <header className="sticky top-0 z-40 w-full bg-[#0A0F24]/95 backdrop-blur-md border-b-2 border-black/40 shadow-md">
-        <div className="max-w-[1400px] mx-auto flex items-center justify-between gap-2 h-[72px] px-3 sm:px-6 lg:px-8">
+        <div className="max-w-[1400px] mx-auto flex items-center justify-between gap-3 lg:gap-6 h-[72px] px-3 sm:px-6 lg:px-8">
           {/* Brand Logo / Sticker */}
           <Link href="/" className="group flex items-center gap-3">
             <SiteLogo />
           </Link>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden min-[1440px]:flex items-center gap-5">
+          <nav className="hidden min-[1440px]:flex items-center justify-center gap-6 whitespace-nowrap">
             <a href="#about" className="text-[13px] font-black uppercase tracking-wider hover:text-[#E5A93C] transition-colors">
               ABOUT
             </a>
-            <a href="#theme" className="text-[13px] font-black uppercase tracking-wider hover:text-[#E5A93C] transition-colors">
-              THEME
-            </a>
             <a href="#oratory" className="text-[13px] font-black uppercase tracking-wider hover:text-[#E5A93C] transition-colors">
-              ORATORY SESSION
+              ORATORY
             </a>
             <Link href="/schedule" className="text-[13px] font-black uppercase tracking-wider hover:text-[#E5A93C] transition-colors">
               SCHEDULE
@@ -256,12 +242,6 @@ export default function YPSLandingPage() {
             <Link href="/speakers" className="text-[13px] font-black uppercase tracking-wider hover:text-[#E5A93C] transition-colors">
               SPEAKERS
             </Link>
-            <a href="#transportation" className="text-[13px] font-black uppercase tracking-wider hover:text-[#E5A93C] transition-colors">
-              TRANSPORTATION
-            </a>
-            <a href="#sponsors" className="text-[13px] font-black uppercase tracking-wider hover:text-[#E5A93C] transition-colors">
-              PARTNERS
-            </a>
             <Link href="/faq" className="text-[13px] font-black uppercase tracking-wider hover:text-[#E5A93C] transition-colors">
               FAQ
             </Link>
@@ -372,13 +352,6 @@ export default function YPSLandingPage() {
             >
               REGISTER FOR FREE
             </a>
-            <Link
-              href="/check-in"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-base font-black uppercase tracking-wider py-2 text-white/80"
-            >
-              CHECK-IN PORTAL
-            </Link>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
@@ -393,7 +366,7 @@ export default function YPSLandingPage() {
       </header>
 
       {/* 3. HERO SECTION (USING EVENT FLYER AS PROMINENT BACKGROUND) */}
-      <section className="relative w-full min-h-[820px] md:min-h-[88svh] flex flex-col justify-end overflow-hidden pt-16 pb-32 md:pb-36 bg-flyer-hero">
+      <section className="relative w-full md:min-h-[88svh] flex flex-col justify-start md:justify-end overflow-hidden pt-6 sm:pt-10 md:pt-16 pb-28 md:pb-36 bg-flyer-hero">
         {/* Layered Gradient Backdrop with Flyer Image */}
         <div className="absolute inset-0 z-0 bg-flyer bg-cover bg-center pointer-events-none" />
         <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#0A0F24]/85 via-[#0A0F24]/75 to-[#0A0F24] pointer-events-none" />
@@ -401,7 +374,7 @@ export default function YPSLandingPage() {
 
         {/* Hero Content */}
         <div className="relative z-10 max-w-[1400px] mx-auto w-full px-5 sm:px-6 lg:px-8 flex flex-col gap-6">
-          <div className="max-w-[950px] space-y-5">
+          <div className="max-w-[950px] space-y-4 sm:space-y-5">
             {/* Tilted Sticker: Formerly ATS */}
             <div className="inline-flex -rotate-[2deg] border-2 border-black bg-[#EF7AD5] px-4 py-2 shadow-[4px_4px_0px_0px_#F3C830]">
               <p className="font-roboto text-[12px] sm:text-[14px] font-black uppercase tracking-[0.1em] text-black">
@@ -432,7 +405,7 @@ export default function YPSLandingPage() {
             </p>
 
             {/* Hero CTA Button Row */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-1 sm:pt-4">
               <a
                 href="#register"
                 className="inline-flex items-center justify-center min-h-14 py-3 px-5 sm:px-8 text-sm sm:text-base text-center font-black tracking-wider uppercase bg-[#E5A93C] text-black border-2 border-black shadow-[5px_5px_0px_0px_#EF7AD5] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all active:scale-95"
@@ -445,12 +418,6 @@ export default function YPSLandingPage() {
               >
                 LEARN MORE
               </a>
-              <Link
-                href="/check-in"
-                className="inline-flex items-center justify-center whitespace-nowrap h-14 px-6 text-sm font-bold tracking-wider uppercase bg-white/10 hover:bg-white/20 text-white border-2 border-white/30 transition-all"
-              >
-                CHECK-IN &rarr;
-              </Link>
             </div>
           </div>
         </div>
@@ -646,7 +613,7 @@ export default function YPSLandingPage() {
       {/* 7. TRANSPORTATION CONFIRMATION SECTION */}
       <section id="transportation" className="w-full bg-[#020101] py-16 px-5 sm:px-6 lg:px-8 border-b-2 border-white/10">
         <div className="max-w-[1380px] mx-auto">
-          <div className="border-4 border-black bg-[#111836] p-5 sm:p-12 shadow-[10px_10px_0px_#E5A93C] max-w-3xl mx-auto text-center space-y-4">
+          <div className="border-4 border-black bg-[#111836] p-5 sm:p-12 shadow-[10px_10px_0px_#E5A93C] w-full text-center space-y-4">
             <div className="inline-flex border-2 border-black bg-[#23C1B4] px-4 py-1 text-black text-xs font-black uppercase tracking-widest shadow-[3px_3px_0px_#000]">
               LOGISTICS ANNOUNCEMENT
             </div>
@@ -696,17 +663,17 @@ export default function YPSLandingPage() {
           </h2>
 
           <div className="max-w-2xl mx-auto border-2 border-black bg-[#0A0F24] p-5 sm:p-8 shadow-[6px_6px_0px_#E5A93C] text-left space-y-4">
-            <div className="border-b border-white/10 pb-3 flex justify-between items-center">
+            <div className="border-b border-white/10 pb-4 grid grid-cols-1 sm:grid-cols-[8rem_minmax(0,1fr)] gap-2 sm:gap-6 items-start">
               <span className="font-mortend text-sm uppercase text-[#E5A93C]">START TIME</span>
-              <span className="font-mono text-sm font-bold text-white">09:00 AM WAT</span>
+              <span className="font-mono text-sm font-bold text-white min-w-0 leading-relaxed sm:text-right">09:00 AM WAT</span>
             </div>
-            <div className="border-b border-white/10 pb-3 flex justify-between items-center">
+            <div className="border-b border-white/10 pb-4 grid grid-cols-1 sm:grid-cols-[8rem_minmax(0,1fr)] gap-2 sm:gap-6 items-start">
               <span className="font-mortend text-sm uppercase text-[#E5A93C]">DATE</span>
-              <span className="font-mono text-sm font-bold text-white">SATURDAY, NOVEMBER 7, 2026</span>
+              <span className="font-mono text-sm font-bold text-white min-w-0 leading-relaxed sm:text-right">SATURDAY, NOVEMBER 7, 2026</span>
             </div>
-            <div className="border-b border-white/10 pb-3 flex justify-between items-center">
+            <div className="border-b border-white/10 pb-4 grid grid-cols-1 sm:grid-cols-[8rem_minmax(0,1fr)] gap-2 sm:gap-6 items-start">
               <span className="font-mortend text-sm uppercase text-[#E5A93C]">VENUE</span>
-              <span className="font-mono text-sm font-bold text-white">20 JOSSY CASTROL STREET, BARIGA, LAGOS</span>
+              <span className="font-mono text-sm font-bold text-white min-w-0 leading-relaxed sm:text-right">20 JOSSY CASTROL STREET, BARIGA, LAGOS</span>
             </div>
 
             <p className="text-xs text-white/70 pt-2 leading-relaxed">
@@ -754,7 +721,9 @@ export default function YPSLandingPage() {
             </span>
             <div>
               <span className="font-mortend text-lg sm:text-2xl font-black uppercase tracking-tight block">
-                SUMMIT STARTS IN: {timeLeft.days}D : {timeLeft.hours}H : {timeLeft.minutes}M : {timeLeft.seconds}S
+                {!timeLeft ? 'COUNTDOWN LOADING…' : Object.values(timeLeft).every((value) => value === 0)
+                  ? 'THE SUMMIT HAS STARTED!'
+                  : `SUMMIT STARTS IN: ${timeLeft.days}D : ${String(timeLeft.hours).padStart(2, '0')}H : ${String(timeLeft.minutes).padStart(2, '0')}M : ${String(timeLeft.seconds).padStart(2, '0')}S`}
               </span>
               <span className="text-xs font-bold uppercase tracking-wider text-black/75">
                 Saturday, November 7, 2026 &bull; 9:00 AM &bull; 20 Jossy Castrol Street, Bariga, Lagos
@@ -885,7 +854,7 @@ export default function YPSLandingPage() {
                   placeholder="e.g. David Oluwaseun Adeleke"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full h-14 bg-[#0A0F24] border-2 border-white/20 focus:border-[#E5A93C] px-4 font-bold text-white placeholder:text-white/30 focus:outline-none transition-colors"
+                  className="w-full h-14 bg-[#0A0F24] border-2 border-white/20 focus:border-[#E5A93C] px-4 font-normal text-white placeholder:text-white/30 focus:outline-none transition-colors"
                 />
               </div>
 
@@ -901,7 +870,7 @@ export default function YPSLandingPage() {
                     placeholder="e.g. 08012345678"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full h-14 bg-[#0A0F24] border-2 border-white/20 focus:border-[#E5A93C] px-4 font-bold text-white placeholder:text-white/30 focus:outline-none transition-colors"
+                    className="w-full h-14 bg-[#0A0F24] border-2 border-white/20 focus:border-[#E5A93C] px-4 font-normal text-white placeholder:text-white/30 focus:outline-none transition-colors"
                   />
                 </div>
 
@@ -915,7 +884,7 @@ export default function YPSLandingPage() {
                     placeholder="e.g. david@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full h-14 bg-[#0A0F24] border-2 border-white/20 focus:border-[#E5A93C] px-4 font-bold text-white placeholder:text-white/30 focus:outline-none transition-colors"
+                    className="w-full h-14 bg-[#0A0F24] border-2 border-white/20 focus:border-[#E5A93C] px-4 font-normal text-white placeholder:text-white/30 focus:outline-none transition-colors"
                   />
                 </div>
               </div>
@@ -931,7 +900,7 @@ export default function YPSLandingPage() {
                   placeholder="e.g. Great Impact Baptist Church / UNILAG / Yaba"
                   value={church}
                   onChange={(e) => setChurch(e.target.value)}
-                  className="w-full h-14 bg-[#0A0F24] border-2 border-white/20 focus:border-[#E5A93C] px-4 font-bold text-white placeholder:text-white/30 focus:outline-none transition-colors"
+                  className="w-full h-14 bg-[#0A0F24] border-2 border-white/20 focus:border-[#E5A93C] px-4 font-normal text-white placeholder:text-white/30 focus:outline-none transition-colors"
                 />
               </div>
 
@@ -944,7 +913,7 @@ export default function YPSLandingPage() {
                   <select
                     value={ageBracket}
                     onChange={(e) => setAgeBracket(e.target.value)}
-                    className="w-full h-14 bg-[#0A0F24] border-2 border-white/20 focus:border-[#E5A93C] px-4 font-bold text-white focus:outline-none transition-colors"
+                    className="w-full h-14 bg-[#0A0F24] border-2 border-white/20 focus:border-[#E5A93C] px-4 font-normal text-white focus:outline-none transition-colors"
                   >
                     <option value="13-16">13 – 16 years (Teens)</option>
                     <option value="17-19">17 – 19 years</option>
@@ -960,7 +929,7 @@ export default function YPSLandingPage() {
                   <select
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
-                    className="w-full h-14 bg-[#0A0F24] border-2 border-white/20 focus:border-[#E5A93C] px-4 font-bold text-white focus:outline-none transition-colors"
+                    className="w-full h-14 bg-[#0A0F24] border-2 border-white/20 focus:border-[#E5A93C] px-4 font-normal text-white focus:outline-none transition-colors"
                   >
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
@@ -972,7 +941,7 @@ export default function YPSLandingPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full min-h-16 h-auto px-3 py-4 leading-relaxed bg-[#E5A93C] hover:bg-[#F3C830] text-black font-mortend text-base sm:text-lg font-black uppercase tracking-wider border-2 border-black shadow-[6px_6px_0px_#EF7AD5] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_#EF7AD5] active:scale-98 transition-all cursor-pointer disabled:opacity-50"
+                className="w-full min-h-16 h-auto px-6 py-5 leading-relaxed bg-[#E5A93C] hover:bg-[#F3C830] text-black font-mortend text-base sm:text-lg font-black uppercase tracking-wider border-2 border-black shadow-[6px_6px_0px_#EF7AD5] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_#EF7AD5] active:scale-98 transition-all cursor-pointer disabled:opacity-50"
               >
                 {submitting ? 'RESERVING PASS...' : 'COMPLETE FREE REGISTRATION →'}
               </button>
@@ -1088,13 +1057,12 @@ export default function YPSLandingPage() {
             <ul className="space-y-2 text-xs font-bold uppercase tracking-wider text-white/75">
               <li><a href="#register" className="hover:text-[#E5A93C]">Free Registration Form</a></li>
               <li>
-                <button onClick={() => setShowLookup(true)} className="hover:text-[#E5A93C] cursor-pointer text-left">
+                <button onClick={() => setShowLookup(true)} className="hover:text-[#E5A93C] cursor-pointer text-left uppercase tracking-wider">
                   Find Registration Pass ID
                 </button>
               </li>
-              <li><Link href="/check-in" className="hover:text-[#E5A93C]">Attendee Check-in Desk</Link></li>
+
               <li><Link href="/faq" className="hover:text-[#E5A93C]">Frequently Asked Questions</Link></li>
-              <li><Link href="/check-in/login" className="hover:text-[#E5A93C]">Staff Admin Portal</Link></li>
             </ul>
           </div>
 
