@@ -479,7 +479,7 @@ export default function YPSLandingPage() {
               </span>
               <h3 className="font-mortend text-xl font-black uppercase">ORATORY SESSION</h3>
               <p className="text-xs font-bold text-black/80 mt-2 leading-relaxed">
-                Submit a 2-minute video by 20 October 2026. Compete for prizes of ₦150,000, ₦100,000, and ₦50,000.
+                Submit a 2-minute video by 20 October 2026. Compete for prizes of ₦100,000, ₦60,000, and ₦40,000 — ₦200,000 in total.
               </p>
             </div>
 
@@ -587,9 +587,10 @@ export default function YPSLandingPage() {
             <p className="text-[#E5A93C] font-black uppercase">Stage 1 topic</p>
             <h3 className="text-xl sm:text-2xl font-bold">“What Does It Mean to Be a Young Christian in Today’s World?”</h3>
             <div className="flex flex-wrap justify-center gap-6 pt-4">
-              <p><strong className="text-[#E5A93C] text-2xl">₦150,000</strong><br />1st place</p>
-              <p><strong className="text-[#E5A93C] text-2xl">₦100,000</strong><br />2nd place</p>
-              <p><strong className="text-[#E5A93C] text-2xl">₦50,000</strong><br />3rd place</p>
+              <p><strong className="text-[#E5A93C] text-2xl">₦100,000</strong><br />1st place</p>
+              <p><strong className="text-[#E5A93C] text-2xl">₦60,000</strong><br />2nd place</p>
+              <p><strong className="text-[#E5A93C] text-2xl">₦40,000</strong><br />3rd place</p>
+              <p className="col-span-full font-bold">Total prize money: ₦200,000</p>
             </div>
           </div>
           <p className="font-bold">Great Impact Baptist Church, Bariga, Lagos. Oratory participants: Stage 2 begins at 8:30 a.m., before the summit’s 9:00 a.m. start.</p>
@@ -605,8 +606,8 @@ export default function YPSLandingPage() {
             </ul>
           </div>
           <a href="https://forms.gle/gVo24PTSzS4WwDh26" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center border-4 border-black bg-[#111836] text-white px-6 py-4 font-black uppercase shadow-[5px_5px_0px_#000] hover:bg-[#0A0F24]">Register &amp; submit your video →</a>
-          <p className="text-sm">Oratory entries use a separate form from free summit registration.</p>
-          <a href="/oratory-poster.png" target="_blank" rel="noopener noreferrer" className="inline-block font-black underline">View competition poster →</a>
+          <p className="text-sm">Use the form above for full competition details, rules, registration, and Stage 1 video submission. Oratory entries are separate from free summit registration.</p>
+          <a href="/oratory-poster.png?v=20261006" target="_blank" rel="noopener noreferrer" className="inline-block font-black underline">View competition poster →</a>
         </div>
       </section>
 
