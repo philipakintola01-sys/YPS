@@ -3,7 +3,7 @@ import SiteLogo from '@/app/components/SiteLogo';
 
 export const metadata = {
   title: 'Summit Pass & Registration | YPS 1.0',
-  description: 'Reserve your 100% free admission pass for Young People’s Summit (YPS 1.0) on Saturday, November 7, 2026.',
+  description: 'Reserve your admission pass for Young People’s Summit (YPS 1.0) on Saturday, November 7, 2026.',
 };
 
 export default function TicketsPage() {
@@ -35,7 +35,7 @@ export default function TicketsPage() {
       <main className="max-w-3xl mx-auto w-full px-5 sm:px-6 py-12 sm:py-16">
         <div className="text-center space-y-4 mb-12">
           <div className="inline-flex border-2 border-black bg-[#EF7AD5] px-4 py-1 text-black font-black text-xs uppercase shadow-[3px_3px_0px_#F3C830]">
-            FREE REGISTRATION
+            REGISTRATION
           </div>
           <h1 className="font-mortend text-3xl sm:text-5xl font-black uppercase text-white">
             RESERVE YOUR SUMMIT PASS
@@ -59,10 +59,6 @@ export default function TicketsPage() {
               <p className="text-xs text-[#E5A93C] uppercase font-bold mt-1">
                 A NEW COVENANT &bull; AGES 13–25+
               </p>
-            </div>
-            <div className="text-left sm:text-right">
-              <span className="font-mortend text-3xl sm:text-4xl font-black text-[#E5A93C]">FREE</span>
-              <p className="text-xs text-white/50 uppercase font-bold">100% FREE ENTRY</p>
             </div>
           </div>
 

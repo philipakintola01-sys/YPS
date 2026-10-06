@@ -216,7 +216,7 @@ export default function YPSLandingPage() {
       <div className="w-full bg-black border-b border-white/10 px-4 py-2 text-center text-[12px] sm:text-[13px] font-bold text-white/90 z-50">
         <span className="text-[#E5A93C] uppercase tracking-wider font-extrabold mr-2">Summit Venue:</span>
         <span className="text-white/85">
-          20 Jossy Castrol Street, Bariga, Lagos • Saturday, Nov 7, 2026 • Starts 9:00 AM • 100% Free
+          20 Jossy Castrol Street, Bariga, Lagos • Saturday, Nov 7, 2026 • Starts 9:00 AM
         </span>
       </div>
 
@@ -401,7 +401,7 @@ export default function YPSLandingPage() {
             {/* Accurate Event Overview */}
             <p className="text-[16px] sm:text-[18px] md:text-[20px] font-medium text-white/90 leading-[1.55] max-w-2xl">
               Young People’s Summit (YPS 1.0) is designed for young people ages 13 to 25 and above to encounter God,
-              step into divine covenant, and build purposeful lives. Admission is 100% free.
+              step into divine covenant, and build purposeful lives.
             </p>
 
             {/* Hero CTA Button Row */}
@@ -433,7 +433,7 @@ export default function YPSLandingPage() {
                 THEME: A NEW COVENANT • HEBREWS 8:8–10 &bull; JAMES 1:4 •
               </span>
               <span className="text-lg md:text-2xl font-black uppercase tracking-widest text-black">
-                TARGET AUDIENCE: AGES 13–25+ • 100% FREE ENTRY • TRANSPORTATION CONFIRMED •
+                TARGET AUDIENCE: AGES 13–25+ • TRANSPORTATION CONFIRMED •
               </span>
               <span className="text-lg md:text-2xl font-black uppercase tracking-widest text-black">
                 ORATORY SESSION CONFIRMED • REGISTER DIRECTLY ONLINE •
@@ -488,7 +488,7 @@ export default function YPSLandingPage() {
               <span className="text-xs font-black uppercase bg-black text-[#23C1B4] px-2.5 py-1 inline-block mb-3">
                 LOGISTICS
               </span>
-              <h3 className="font-mortend text-xl font-black uppercase">FREE TRANSPORT</h3>
+              <h3 className="font-mortend text-xl font-black uppercase">TRANSPORTATION</h3>
               <p className="text-xs font-bold text-black/80 mt-2 leading-relaxed">
                 Transportation for attendees is confirmed. Pickup points, routes, and timings will be announced soon.
               </p>
@@ -606,7 +606,7 @@ export default function YPSLandingPage() {
             </ul>
           </div>
           <a href="https://forms.gle/gVo24PTSzS4WwDh26" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center border-4 border-black bg-[#111836] text-white px-6 py-4 font-black uppercase shadow-[5px_5px_0px_#000] hover:bg-[#0A0F24]">Register &amp; submit your video →</a>
-          <p className="text-sm">Use the form above for full competition details, rules, registration, and Stage 1 video submission. Oratory entries are separate from free summit registration.</p>
+          <p className="text-sm">Use the form above for full competition details, rules, registration, and Stage 1 video submission. Oratory entries are separate from summit registration.</p>
           <a href="/oratory-poster.png?v=20261006" target="_blank" rel="noopener noreferrer" className="inline-block font-black underline">View competition poster →</a>
         </div>
       </section>
@@ -753,7 +753,7 @@ export default function YPSLandingPage() {
               REGISTER FOR YPS 1.0
             </h2>
             <p className="text-white/70 text-base sm:text-lg max-w-xl mx-auto">
-              Registration is 100% free for young people ages 13 to 25 and above. Complete the form below to receive your unique Pass ID.
+              Registration is open to young people ages 13 to 25 and above. Complete the form below to receive your unique Pass ID.
             </p>
           </div>
 
@@ -944,7 +944,7 @@ export default function YPSLandingPage() {
                 disabled={submitting}
                 className="w-full min-h-16 h-auto px-6 py-5 leading-relaxed bg-[#E5A93C] hover:bg-[#F3C830] text-black font-mortend text-base sm:text-lg font-black uppercase tracking-wider border-2 border-black shadow-[6px_6px_0px_#EF7AD5] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_#EF7AD5] active:scale-98 transition-all cursor-pointer disabled:opacity-50"
               >
-                {submitting ? 'RESERVING PASS...' : 'COMPLETE FREE REGISTRATION →'}
+                {submitting ? 'RESERVING PASS...' : 'COMPLETE REGISTRATION →'}
               </button>
 
               <div className="text-center pt-2">
@@ -1056,7 +1056,7 @@ export default function YPSLandingPage() {
           <div className="space-y-3">
             <h4 className="font-mortend text-sm font-black uppercase text-[#E5A93C]">ATTENDEE ACCESS</h4>
             <ul className="space-y-2 text-xs font-bold uppercase tracking-wider text-white/75">
-              <li><a href="#register" className="hover:text-[#E5A93C]">Free Registration Form</a></li>
+              <li><a href="#register" className="hover:text-[#E5A93C]">Registration Form</a></li>
               <li>
                 <button onClick={() => setShowLookup(true)} className="hover:text-[#E5A93C] cursor-pointer text-left uppercase tracking-wider">
                   Find Registration Pass ID

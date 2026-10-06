@@ -25,8 +25,8 @@ export default function FaqPage() {
       a: 'The summit is designed for young people ages 13 to 25 and above (teenagers, students, and young adults).',
     },
     {
-      q: 'How much does it cost to register?',
-      a: 'Registration is 100% free. You can register directly through this website.',
+      q: 'How do I register?',
+      a: 'You can register directly through this website to receive your Summit Pass ID.',
     },
     {
       q: 'Is transportation provided for attendees?',
@@ -115,7 +115,7 @@ export default function FaqPage() {
             HAVE MORE QUESTIONS?
           </h3>
           <p className="text-sm font-bold max-w-lg mx-auto">
-            You can reach out or secure your free pass today before registration fills up.
+            You can reach out or secure your pass today before registration fills up.
           </p>
           <Link
             href="/#register"
