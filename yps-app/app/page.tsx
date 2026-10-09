@@ -1,10 +1,106 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import SiteLogo from '@/app/components/SiteLogo';
 import MinisterCards from '@/app/components/MinisterCards';
 import { createClient } from '@/utils/supabase/client';
+
+interface DropdownOption {
+  value: string;
+  label: string;
+}
+
+function BrutalistDropdown({
+  value,
+  onChange,
+  options,
+}: {
+  value: string;
+  onChange: (val: string) => void;
+  options: DropdownOption[];
+}) {
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  const selectedOption = options.find((opt) => opt.value === value) || options[0];
+
+  return (
+    <div ref={containerRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className={`w-full h-14 bg-[#0A0F24] border-2 px-4 font-bold text-white flex items-center justify-between gap-3 cursor-pointer transition-all focus:outline-none ${
+          open
+            ? 'border-[#E5A93C] shadow-[4px_4px_0px_#E5A93C]'
+            : 'border-white/20 hover:border-[#E5A93C]/70'
+        }`}
+      >
+        <span className="truncate text-left">{selectedOption?.label ?? value}</span>
+        <span className="w-8 h-8 bg-[#E5A93C] text-black border-2 border-black shadow-[2px_2px_0px_#EF7AD5] flex items-center justify-center shrink-0 transition-transform">
+          <svg
+            className={`w-4 h-4 transition-transform duration-150 ${open ? 'rotate-180' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={3}
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="square" strokeLinejoin="miter" d="M19 9l-7 7-7-7" />
+          </svg>
+        </span>
+      </button>
+
+      {open && (
+        <ul
+          role="listbox"
+          className="absolute z-30 left-0 right-0 mt-1.5 border-2 border-black bg-[#0A0F24] shadow-[6px_6px_0px_#E5A93C] divide-y divide-white/10 overflow-hidden"
+        >
+          {options.map((opt) => {
+            const isSelected = opt.value === value;
+            return (
+              <li key={opt.value} role="option" aria-selected={isSelected}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onChange(opt.value);
+                    setOpen(false);
+                  }}
+                  className={`w-full px-4 py-3.5 text-left text-sm font-bold flex items-center justify-between transition-colors cursor-pointer ${
+                    isSelected
+                      ? 'bg-[#E5A93C] text-black font-black'
+                      : 'text-white hover:bg-[#111836] hover:text-[#E5A93C]'
+                  }`}
+                >
+                  <span>{opt.label}</span>
+                  {isSelected && <span className="font-black text-xs">✓</span>}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
 
 interface FieldConfig {
   id: string;
@@ -57,6 +153,25 @@ export default function YPSLandingPage() {
 
   // Countdown State for Saturday, Nov 7, 2026, 09:00 AM WAT
   const [timeLeft, setTimeLeft] = useState<{ days: number; hours: number; minutes: number; seconds: number } | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('preview') === 'modal') {
+        const timer = setTimeout(() => {
+          setSuccessResult({
+            registration_id: 'YPS26-4821',
+            full_name: 'David Adeleke',
+            phone_number: '08012345678',
+            email: 'david.adeleke@example.com',
+            church_organisation: 'Grace Baptist Church',
+            registered_at: '2026-10-09T10:00:00.000Z',
+          });
+        }, 0);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const targetDate = new Date('2026-11-07T09:00:00+01:00').getTime();
@@ -159,9 +274,10 @@ export default function YPSLandingPage() {
       } else if (resData.record) {
         setSuccessResult(resData.record);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Registration error:', err);
-      setErrorMsg(err.message || 'An unexpected error occurred during registration. Please try again.');
+      const message = err instanceof Error ? err.message : 'An unexpected error occurred during registration. Please try again.';
+      setErrorMsg(message);
     } finally {
       setSubmitting(false);
     }
@@ -184,7 +300,7 @@ export default function YPSLandingPage() {
     const isEmail = query.includes('@');
 
     try {
-      const { data: recoveredId, error } = await supabase.rpc('lookup_registration_id', {
+      const { data: recoveredId } = await supabase.rpc('lookup_registration_id', {
         p_phone: isEmail ? null : query,
         p_email: isEmail ? query.toLowerCase() : null,
       });
@@ -200,7 +316,7 @@ export default function YPSLandingPage() {
           message: 'No registration record was found matching that phone number or email address.',
         });
       }
-    } catch (err: any) {
+    } catch {
       setLookupResult({
         found: false,
         message: 'Unable to perform lookup. Please check your details and try again.',
@@ -264,7 +380,7 @@ export default function YPSLandingPage() {
               href="#register"
               className="inline-flex items-center justify-center h-11 px-3 sm:px-5 text-[10px] sm:text-sm font-black uppercase tracking-wider bg-[#E5A93C] text-black border-2 border-black shadow-[4px_4px_0px_0px_#EF7AD5] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#EF7AD5] active:scale-95 transition-all"
             >
-              REGISTER FREE
+              REGISTER
             </a>
 
             {/* Mobile Menu Toggle */}
@@ -350,7 +466,7 @@ export default function YPSLandingPage() {
               onClick={() => setMobileMenuOpen(false)}
               className="text-base font-black uppercase tracking-wider py-2 border-b border-white/10 text-[#E5A93C]"
             >
-              REGISTER FOR FREE
+              REGISTER
             </a>
             <button
               onClick={() => {
@@ -366,30 +482,30 @@ export default function YPSLandingPage() {
       </header>
 
       {/* 3. HERO SECTION (USING EVENT FLYER AS PROMINENT BACKGROUND) */}
-      <section className="relative w-full md:min-h-[88svh] flex flex-col justify-start md:justify-end overflow-hidden pt-6 sm:pt-10 md:pt-16 pb-28 md:pb-36 bg-flyer-hero">
+      <section className="relative w-full min-h-[calc(100svh-108px)] flex flex-col justify-center overflow-hidden pt-4 sm:pt-6 pb-20 md:pb-24 bg-flyer-hero">
         {/* Layered Gradient Backdrop with Flyer Image */}
         <div className="absolute inset-0 z-0 bg-flyer bg-cover bg-center pointer-events-none" />
         <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#0A0F24]/85 via-[#0A0F24]/75 to-[#0A0F24] pointer-events-none" />
         <div className="absolute inset-0 z-0 bg-radial from-transparent via-[#0A0F24]/60 to-[#0A0F24]/95 pointer-events-none" />
 
         {/* Hero Content */}
-        <div className="relative z-10 max-w-[1400px] mx-auto w-full px-5 sm:px-6 lg:px-8 flex flex-col gap-6">
-          <div className="max-w-[950px] space-y-4 sm:space-y-5">
+        <div className="relative z-10 max-w-[1400px] mx-auto w-full px-5 sm:px-6 lg:px-8 flex flex-col gap-5">
+          <div className="max-w-[950px] space-y-3 sm:space-y-4">
             {/* Tilted Sticker: Formerly ATS */}
-            <div className="inline-flex -rotate-[2deg] border-2 border-black bg-[#EF7AD5] px-4 py-2 shadow-[4px_4px_0px_0px_#F3C830]">
+            <div className="inline-flex -rotate-[2deg] border-2 border-black bg-[#EF7AD5] px-4 py-1.5 shadow-[4px_4px_0px_0px_#F3C830]">
               <p className="font-roboto text-[12px] sm:text-[14px] font-black uppercase tracking-[0.1em] text-black">
                 FORMERLY ANNUAL TEENS SUMMIT (ATS)
               </p>
             </div>
 
             {/* Official Title */}
-            <h1 className="font-mortend text-[34px] sm:text-[56px] md:text-[72px] font-black uppercase leading-[0.93] tracking-tight text-white drop-shadow-xl">
+            <h1 className="font-mortend text-[34px] sm:text-[52px] md:text-[64px] font-black uppercase leading-[0.93] tracking-tight text-white drop-shadow-xl">
               YOUNG PEOPLE’S <br />
               <span className="text-[#E5A93C]">SUMMIT 1.0</span>
             </h1>
 
             {/* Theme Badge */}
-            <div className="inline-block border-2 border-black bg-[#F3C830] px-4 py-2 text-black shadow-[4px_4px_0px_0px_#000]">
+            <div className="inline-block border-2 border-black bg-[#F3C830] px-4 py-1.5 text-black shadow-[4px_4px_0px_0px_#000]">
               <span className="font-mortend text-sm sm:text-base font-black uppercase tracking-wider">
                 THEME: A NEW COVENANT
               </span>
@@ -399,18 +515,18 @@ export default function YPSLandingPage() {
             </div>
 
             {/* Accurate Event Overview */}
-            <p className="text-[16px] sm:text-[18px] md:text-[20px] font-medium text-white/90 leading-[1.55] max-w-2xl">
+            <p className="text-[15px] sm:text-[17px] md:text-[19px] font-medium text-white/90 leading-[1.5] max-w-2xl">
               Young People’s Summit (YPS 1.0) is designed for young people ages 13 to 25 and above to encounter God,
               step into divine covenant, and build purposeful lives.
             </p>
 
             {/* Hero CTA Button Row */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-1 sm:pt-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-1 sm:pt-2">
               <a
                 href="#register"
                 className="inline-flex items-center justify-center min-h-14 py-3 px-5 sm:px-8 text-sm sm:text-base text-center font-black tracking-wider uppercase bg-[#E5A93C] text-black border-2 border-black shadow-[5px_5px_0px_0px_#EF7AD5] hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all active:scale-95"
               >
-                REGISTER FOR FREE
+                REGISTER
               </a>
               <a
                 href="#about"
@@ -528,7 +644,7 @@ export default function YPSLandingPage() {
                 href="#register"
                 className="inline-flex items-center justify-center h-12 px-8 text-xs font-black uppercase tracking-wider bg-[#E5A93C] text-black border-2 border-black shadow-[4px_4px_0px_#EF7AD5] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
               >
-                JOIN US ON NOV 7 &bull; REGISTER FREE
+                JOIN US ON NOV 7 &bull; REGISTER
               </a>
             </div>
           </div>
@@ -586,11 +702,24 @@ export default function YPSLandingPage() {
           <div className="bg-[#0A0F24] text-white border-4 border-black p-5 sm:p-8 space-y-4">
             <p className="text-[#E5A93C] font-black uppercase">Stage 1 topic</p>
             <h3 className="text-xl sm:text-2xl font-bold">“What Does It Mean to Be a Young Christian in Today’s World?”</h3>
-            <div className="flex flex-wrap justify-center gap-6 pt-4">
-              <p><strong className="text-[#E5A93C] text-2xl">₦100,000</strong><br />1st place</p>
-              <p><strong className="text-[#E5A93C] text-2xl">₦60,000</strong><br />2nd place</p>
-              <p><strong className="text-[#E5A93C] text-2xl">₦40,000</strong><br />3rd place</p>
-              <p className="col-span-full font-bold">Total prize money: ₦200,000</p>
+            <div className="pt-4 space-y-4">
+              <div className="grid grid-cols-3 gap-2 sm:gap-6 max-w-lg mx-auto text-center">
+                <div>
+                  <strong className="text-[#E5A93C] text-lg sm:text-2xl font-extrabold block">₦100,000</strong>
+                  <span className="text-xs sm:text-sm text-white/80">1st place</span>
+                </div>
+                <div>
+                  <strong className="text-[#E5A93C] text-lg sm:text-2xl font-extrabold block">₦60,000</strong>
+                  <span className="text-xs sm:text-sm text-white/80">2nd place</span>
+                </div>
+                <div>
+                  <strong className="text-[#E5A93C] text-lg sm:text-2xl font-extrabold block">₦40,000</strong>
+                  <span className="text-xs sm:text-sm text-white/80">3rd place</span>
+                </div>
+              </div>
+              <p className="text-center font-bold text-sm sm:text-base border-t border-white/10 pt-3 text-white/90">
+                Total prize money: <span className="text-[#E5A93C] font-black">₦200,000</span>
+              </p>
             </div>
           </div>
           <p className="font-bold">Great Impact Baptist Church, Bariga, Lagos. Oratory participants: Stage 2 begins at 8:30 a.m., before the summit’s 9:00 a.m. start.</p>
@@ -736,7 +865,7 @@ export default function YPSLandingPage() {
             href="#register"
             className="inline-flex items-center justify-center h-12 px-8 text-sm font-black uppercase tracking-wider bg-[#EF7AD5] text-black border-2 border-black shadow-[4px_4px_0px_#000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all shrink-0"
           >
-            REGISTER FOR FREE NOW
+            REGISTER NOW
           </a>
         </div>
       </section>
@@ -756,84 +885,6 @@ export default function YPSLandingPage() {
               Registration is open to young people ages 13 to 25 and above. Complete the form below to receive your unique Pass ID.
             </p>
           </div>
-
-          {/* Success Result Confirmation */}
-          {successResult && (
-            <div className="border-4 border-black bg-[#F3C830] text-black p-5 sm:p-8 shadow-[12px_12px_0px_#EF7AD5] mb-12 space-y-6">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-black pb-4">
-                <div>
-                  <span className="bg-black text-[#F3C830] text-[11px] font-black uppercase px-3 py-1">
-                    REGISTRATION CONFIRMED ✓
-                  </span>
-                  <h3 className="font-mortend text-2xl font-black uppercase mt-2">
-                    WELCOME, {successResult.full_name}!
-                  </h3>
-                </div>
-                <div className="text-right">
-                  <p className="text-[11px] font-bold uppercase text-black/70">EVENT DATE</p>
-                  <p className="font-mortend text-sm font-bold">NOV 7, 2026</p>
-                </div>
-              </div>
-
-              <div className="bg-black text-white p-6 border-2 border-black flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs text-[#E5A93C] uppercase tracking-widest font-bold">YOUR SUMMIT PASS ID</p>
-                  <p className="font-mortend text-3xl sm:text-4xl font-black text-white tracking-wider">
-                    {successResult.registration_id}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleCopy(successResult.registration_id)}
-                  className="w-full sm:w-auto h-12 px-6 bg-[#E5A93C] text-black font-black uppercase tracking-wider border-2 border-white hover:bg-white transition-colors cursor-pointer"
-                >
-                  {copied ? 'COPIED! ✓' : 'COPY PASS ID'}
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 break-words text-sm font-medium text-black/80">
-                <div>
-                  <span className="font-bold block text-black">PHONE:</span>
-                  {successResult.phone_number}
-                </div>
-                <div>
-                  <span className="font-bold block text-black">EMAIL:</span>
-                  {successResult.email}
-                </div>
-                <div className="col-span-1">
-                  <span className="font-bold block text-black">CHURCH / ORG:</span>
-                  {successResult.church_organisation}
-                </div>
-              </div>
-
-              <p className="text-xs font-bold text-center border-t border-black/20 pt-4">
-                Please screenshot or write down your Summit Pass ID. Present it upon arrival at 20 Jossy Castrol Street, Bariga for check-in.
-              </p>
-            </div>
-          )}
-
-          {/* Duplicate Notice */}
-          {existingResult && (
-            <div className="border-4 border-black bg-[#FFE08C] text-black p-6 shadow-[8px_8px_0px_#000000] mb-8 space-y-4">
-              <span className="bg-black text-white text-xs font-black uppercase px-2.5 py-1">
-                ALREADY REGISTERED
-              </span>
-              <h3 className="font-mortend text-xl font-bold uppercase">
-                A RECORD ALREADY EXISTS FOR THIS PHONE OR EMAIL
-              </h3>
-              <div className="p-4 bg-black text-white border-2 border-black flex flex-wrap gap-4 items-center justify-between">
-                <div>
-                  <p className="text-[10px] text-[#E5A93C] uppercase">YOUR PASS ID</p>
-                  <p className="font-mortend text-2xl font-black">{existingResult.id}</p>
-                </div>
-                <button
-                  onClick={() => handleCopy(existingResult.id)}
-                  className="px-4 py-2 bg-[#E5A93C] text-black font-black text-xs uppercase cursor-pointer"
-                >
-                  {copied ? 'COPIED!' : 'COPY ID'}
-                </button>
-              </div>
-            </div>
-          )}
 
           {/* Form Card */}
           <div className="border-4 border-black bg-[#111836] p-4 sm:p-10 shadow-[12px_12px_0px_#E5A93C]">
@@ -911,30 +962,30 @@ export default function YPSLandingPage() {
                   <label className="block text-xs font-black uppercase tracking-widest text-[#E5A93C]">
                     AGE BRACKET (TARGET: 13–25+)
                   </label>
-                  <select
+                  <BrutalistDropdown
                     value={ageBracket}
-                    onChange={(e) => setAgeBracket(e.target.value)}
-                    className="w-full h-14 bg-[#0A0F24] border-2 border-white/20 focus:border-[#E5A93C] px-4 font-normal text-white focus:outline-none transition-colors"
-                  >
-                    <option value="13-16">13 – 16 years (Teens)</option>
-                    <option value="17-19">17 – 19 years</option>
-                    <option value="20-25">20 – 25 years (Young Adults)</option>
-                    <option value="25+">25+ years</option>
-                  </select>
+                    onChange={setAgeBracket}
+                    options={[
+                      { value: '13-16', label: '13 – 16 years (Teens)' },
+                      { value: '17-19', label: '17 – 19 years' },
+                      { value: '20-25', label: '20 – 25 years (Young Adults)' },
+                      { value: '25+', label: '25+ years' },
+                    ]}
+                  />
                 </div>
 
                 <div className="space-y-2">
                   <label className="block text-xs font-black uppercase tracking-widest text-[#E5A93C]">
                     GENDER
                   </label>
-                  <select
+                  <BrutalistDropdown
                     value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    className="w-full h-14 bg-[#0A0F24] border-2 border-white/20 focus:border-[#E5A93C] px-4 font-normal text-white focus:outline-none transition-colors"
-                  >
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                  </select>
+                    onChange={setGender}
+                    options={[
+                      { value: 'Male', label: 'Male' },
+                      { value: 'Female', label: 'Female' },
+                    ]}
+                  />
                 </div>
               </div>
 
@@ -960,6 +1011,119 @@ export default function YPSLandingPage() {
           </div>
         </div>
       </section>
+
+      {/* REGISTRATION RESULT MODAL (EXACT SAME BOX STYLING) */}
+      {(successResult || existingResult) && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-5"
+          onClick={() => {
+            setSuccessResult(null);
+            setExistingResult(null);
+          }}
+        >
+          {successResult && (
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-2xl max-h-[calc(100dvh-40px)] overflow-y-auto border-4 border-black bg-[#F3C830] text-black p-5 sm:p-8 shadow-[12px_12px_0px_#EF7AD5] space-y-6 animate-in zoom-in-95 duration-150"
+            >
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b-2 border-black pb-4">
+                <div>
+                  <span className="bg-black text-[#F3C830] text-[11px] font-black uppercase px-3 py-1">
+                    REGISTRATION CONFIRMED ✓
+                  </span>
+                  <h3 className="font-mortend text-2xl font-black uppercase mt-2">
+                    WELCOME, {successResult.full_name}!
+                  </h3>
+                </div>
+                <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
+                  <div className="text-left sm:text-right">
+                    <p className="text-[11px] font-bold uppercase text-black/70">EVENT DATE</p>
+                    <p className="font-mortend text-sm font-bold">NOV 7, 2026</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setSuccessResult(null)}
+                    aria-label="Close confirmation modal"
+                    className="w-9 h-9 bg-black text-[#F3C830] font-black text-base flex items-center justify-center border-2 border-black hover:bg-white hover:text-black transition-colors cursor-pointer shrink-0"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              <div className="bg-black text-white p-6 border-2 border-black flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs text-[#E5A93C] uppercase tracking-widest font-bold">YOUR SUMMIT PASS ID</p>
+                  <p className="font-mortend text-3xl sm:text-4xl font-black text-white tracking-wider">
+                    {successResult.registration_id}
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleCopy(successResult.registration_id)}
+                  className="w-full sm:w-auto h-12 px-6 bg-[#E5A93C] text-black font-black uppercase tracking-wider border-2 border-white hover:bg-white transition-colors cursor-pointer"
+                >
+                  {copied ? 'COPIED! ✓' : 'COPY PASS ID'}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 break-words text-sm font-medium text-black/80">
+                <div>
+                  <span className="font-bold block text-black">PHONE:</span>
+                  {successResult.phone_number}
+                </div>
+                <div>
+                  <span className="font-bold block text-black">EMAIL:</span>
+                  {successResult.email}
+                </div>
+                <div className="col-span-1">
+                  <span className="font-bold block text-black">CHURCH / ORG:</span>
+                  {successResult.church_organisation}
+                </div>
+              </div>
+
+              <p className="text-xs font-bold text-center border-t border-black/20 pt-4">
+                Please screenshot or write down your Summit Pass ID. Present it upon arrival at 20 Jossy Castrol Street, Bariga for check-in.
+              </p>
+            </div>
+          )}
+
+          {existingResult && (
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-xl max-h-[calc(100dvh-40px)] overflow-y-auto border-4 border-black bg-[#FFE08C] text-black p-6 shadow-[8px_8px_0px_#000000] space-y-4 animate-in zoom-in-95 duration-150"
+            >
+              <div className="flex items-center justify-between gap-4">
+                <span className="bg-black text-white text-xs font-black uppercase px-2.5 py-1">
+                  ALREADY REGISTERED
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setExistingResult(null)}
+                  aria-label="Close duplicate notice modal"
+                  className="w-8 h-8 bg-black text-white font-black text-sm flex items-center justify-center border-2 border-black hover:bg-[#E5A93C] hover:text-black transition-colors cursor-pointer shrink-0"
+                >
+                  ✕
+                </button>
+              </div>
+              <h3 className="font-mortend text-xl font-bold uppercase">
+                A RECORD ALREADY EXISTS FOR THIS PHONE OR EMAIL
+              </h3>
+              <div className="p-4 bg-black text-white border-2 border-black flex flex-wrap gap-4 items-center justify-between">
+                <div>
+                  <p className="text-[10px] text-[#E5A93C] uppercase">YOUR PASS ID</p>
+                  <p className="font-mortend text-2xl font-black">{existingResult.id}</p>
+                </div>
+                <button
+                  onClick={() => handleCopy(existingResult.id)}
+                  className="px-4 py-2 bg-[#E5A93C] text-black font-black text-xs uppercase cursor-pointer"
+                >
+                  {copied ? 'COPIED!' : 'COPY ID'}
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* 13. FIND MY REGISTRATION MODAL */}
       {showLookup && (

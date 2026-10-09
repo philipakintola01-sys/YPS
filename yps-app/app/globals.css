@@ -130,6 +130,26 @@
 /* Comfortable mobile reading, anchor navigation, and form controls. */
 html { scroll-padding-top: 6rem; }
 body { overflow-wrap: break-word; }
+
+/* Styled dropdowns */
+select {
+  background-color: #0A0F24;
+  color: #FFFFFF;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+select:focus {
+  border-color: #E5A93C;
+  outline: none;
+  box-shadow: 4px 4px 0px 0px #E5A93C;
+}
+select option {
+  background-color: #0A0F24;
+  color: #FFFFFF;
+  padding: 8px 12px;
+}
+
 @media (max-width: 639px) {
   input, select, textarea { font-size: 16px; }
   #register input, #register select { min-width: 0; }
@@ -138,3 +158,4 @@ body { overflow-wrap: break-word; }
 @media (prefers-reduced-motion: reduce) {
   .animate-marquee, .animate-marquee-slow, .animate-marquee-ltr { animation: none; }
 }
+

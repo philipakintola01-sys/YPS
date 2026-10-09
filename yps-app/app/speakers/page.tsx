@@ -27,7 +27,7 @@ export default function SpeakersPage() {
             href="/#register"
             className="px-3 sm:px-5 py-3 bg-[#E5A93C] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#EF7AD5]"
           >
-            REGISTER FREE
+            REGISTER
           </Link>
         </div>
       </header>
@@ -53,7 +53,7 @@ export default function SpeakersPage() {
             href="/#register"
             className="inline-flex items-center justify-center min-h-14 py-3 px-5 sm:px-8 text-center text-xs font-black uppercase tracking-wider bg-[#E5A93C] text-black border-2 border-black shadow-[4px_4px_0px_#EF7AD5] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
           >
-            REGISTER FREE FOR YPS 1.0 &rarr;
+            REGISTER FOR YPS 1.0 &rarr;
           </Link>
         </div>
       </main>

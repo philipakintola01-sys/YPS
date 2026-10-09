@@ -142,7 +142,11 @@ DROP TRIGGER IF EXISTS trg_prevent_duplicate_checkin ON registrations;
 CREATE TRIGGER trg_prevent_duplicate_checkin
   BEFORE UPDATE ON registrations
   FOR EACH ROW
-  WHEN (OLD.checkin_status = 'checked_in' AND NEW.checkin_status = 'checked_in')
+  WHEN (
+    OLD.checkin_status = 'checked_in'
+    AND NEW.checkin_status = 'checked_in'
+    AND OLD.full_name IS NOT DISTINCT FROM NEW.full_name
+  )
   EXECUTE FUNCTION prevent_duplicate_checkin();
 
 -- ---------------------------------------------------------------------------

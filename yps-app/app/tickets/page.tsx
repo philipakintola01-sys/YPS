@@ -26,7 +26,7 @@ export default function TicketsPage() {
             href="/#register"
             className="px-3 sm:px-5 py-3 bg-[#E5A93C] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#EF7AD5]"
           >
-            REGISTER FREE
+            REGISTER
           </Link>
         </div>
       </header>

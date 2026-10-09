@@ -65,7 +65,7 @@ export default function FaqPage() {
             href="/#register"
             className="px-3 sm:px-5 py-3 bg-[#E5A93C] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_#EF7AD5]"
           >
-            REGISTER FREE
+            REGISTER
           </Link>
         </div>
       </header>
@@ -121,7 +121,7 @@ export default function FaqPage() {
             href="/#register"
             className="inline-flex items-center justify-center h-12 px-8 bg-black text-[#E5A93C] font-mortend font-bold text-xs uppercase tracking-wider border-2 border-black hover:bg-white hover:text-black transition-colors"
           >
-            REGISTER FREE NOW →
+            REGISTER NOW →
           </Link>
         </div>
       </main>
