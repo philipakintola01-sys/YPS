@@ -21,6 +21,13 @@ interface RegistrationRecord {
   checked_in_by: string | null;
 }
 
+interface QuestionItem {
+  question_id: string;
+  question_text: string;
+  status: string;
+  submitted_at: string;
+}
+
 interface UserProfile {
   id: string;
   email?: string;
@@ -48,8 +55,12 @@ export default function CheckInPage() {
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
 
-  // Backup Search state
-  const [activeTab, setActiveTab] = useState<'id' | 'search'>('search');
+  // Backup Search & Questions state
+  const [activeTab, setActiveTab] = useState<'id' | 'search' | 'questions'>('search');
+  const [questionsList, setQuestionsList] = useState<QuestionItem[]>([]);
+  const [questionsLoading, setQuestionsLoading] = useState(false);
+  const [questionActionLoading, setQuestionActionLoading] = useState<string | null>(null);
+  const [questionFilter, setQuestionFilter] = useState<'all' | 'pending' | 'approved' | 'answered'>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<RegistrationRecord[]>([]);
   const [searchLoading, setSearchLoading] = useState(true);
@@ -153,6 +164,32 @@ export default function CheckInPage() {
                 checkin_status: 'checked_in',
                 checked_in_at: new Date().toISOString(),
                 checked_in_by: 'mock-admin-id',
+              },
+            ]);
+            setQuestionsList([
+              {
+                question_id: 'q1',
+                question_text: 'How can a young Christian navigate peer pressure in university while standing firm in faith?',
+                status: 'approved',
+                submitted_at: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
+              },
+              {
+                question_id: 'q2',
+                question_text: 'What does walking in "A New Covenant" look like practically for a teenager choosing a career path?',
+                status: 'approved',
+                submitted_at: new Date(Date.now() - 1000 * 60 * 35).toISOString(),
+              },
+              {
+                question_id: 'q3',
+                question_text: 'How do you overcome chronic doubt and develop a real, daily habit of personal prayer and Bible study?',
+                status: 'pending',
+                submitted_at: new Date(Date.now() - 1000 * 60 * 50).toISOString(),
+              },
+              {
+                question_id: 'q4',
+                question_text: 'How should Christian young adults handle relationships and dating before graduation?',
+                status: 'answered',
+                submitted_at: new Date(Date.now() - 1000 * 60 * 80).toISOString(),
               },
             ]);
             setResultCount(2);
@@ -445,6 +482,44 @@ export default function CheckInPage() {
     }
   };
 
+  // 8. Audience Questions Handling (Cards View for Admin / Staff)
+  const loadQuestions = useCallback(async () => {
+    try {
+      setQuestionsLoading(true);
+      const res = await fetch('/api/questions?limit=100');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.questions) {
+          setQuestionsList(data.questions);
+        }
+      }
+    } catch (e) {
+      console.error('Error fetching questions:', e);
+    } finally {
+      setQuestionsLoading(false);
+    }
+  }, []);
+
+  const handleUpdateQuestionStatus = async (questionId: string, newStatus: string) => {
+    setQuestionActionLoading(questionId);
+    try {
+      const res = await fetch('/api/questions', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question_id: questionId, status: newStatus }),
+      });
+      if (res.ok) {
+        setQuestionsList((prev) =>
+          prev.map((q) => (q.question_id === questionId ? { ...q, status: newStatus } : q))
+        );
+      }
+    } catch (e) {
+      console.error('Error updating question:', e);
+    } finally {
+      setQuestionActionLoading(null);
+    }
+  };
+
   const handleBackupSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setPage(0);
@@ -540,7 +615,24 @@ export default function CheckInPage() {
                 : 'border-transparent text-gray-600 hover:text-gray-900'
             }`}
           >
-            Attendees & Search
+            Attendees &amp; Search
+          </button>
+
+          <button
+            onClick={() => {
+              setActiveTab('questions');
+              void loadQuestions();
+            }}
+            className={`px-4 py-2.5 font-bold text-sm border-b-2 cursor-pointer transition-colors flex items-center gap-2 ${
+              activeTab === 'questions'
+                ? 'border-blue-900 text-blue-900 bg-white rounded-t-lg'
+                : 'border-transparent text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            <span>💬 Audience Questions</span>
+            <span className="bg-amber-100 text-amber-900 text-xs px-2 py-0.5 rounded-full font-mono font-bold">
+              {questionsList.length}
+            </span>
           </button>
         </div>
 
@@ -898,6 +990,174 @@ export default function CheckInPage() {
                 <button disabled={(page + 1) * pageSize >= resultCount || searchLoading} onClick={() => setPage(p => p + 1)} className="underline disabled:opacity-40">Next</button>
               </div>
             </div>}
+          </div>
+        )}
+
+        {/* 3. AUDIENCE QUESTIONS CARDS VIEW (ADMIN & STAFF ACCESS) */}
+        {activeTab === 'questions' && (
+          <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 space-y-6">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 pb-4">
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-xl font-bold text-gray-900">Audience Questions (Ask YPS)</h2>
+                  <span className="bg-blue-100 text-blue-900 text-xs px-2.5 py-0.5 rounded-full font-bold">
+                    {questionsList.length} Total
+                  </span>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Submitted anonymously by attendees in the hall. Review, approve, and project cards to the stage screen.
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap items-center gap-2">
+                <a
+                  href="/ask/screen"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#0A0F24] hover:bg-black text-[#E5A93C] font-bold text-xs uppercase rounded-lg border border-black shadow-xs transition-colors"
+                >
+                  <span>🖥️ Open Stage Screen</span>
+                  <span>↗</span>
+                </a>
+                <a
+                  href="/ask"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold text-xs rounded-lg border border-gray-300 transition-colors"
+                >
+                  <span>+ Test Ask Form</span>
+                  <span>↗</span>
+                </a>
+                <button
+                  type="button"
+                  onClick={() => void loadQuestions()}
+                  disabled={questionsLoading}
+                  className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium text-xs rounded-lg border border-gray-300 cursor-pointer disabled:opacity-50"
+                >
+                  {questionsLoading ? 'Refreshing...' : '🔄 Refresh'}
+                </button>
+              </div>
+            </div>
+
+            {/* Filter Pills */}
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-bold text-gray-500 mr-1 uppercase">Filter:</span>
+              {(['all', 'approved', 'pending', 'answered'] as const).map((filterOpt) => (
+                <button
+                  key={filterOpt}
+                  onClick={() => setQuestionFilter(filterOpt)}
+                  className={`px-3 py-1 rounded-full text-xs font-bold capitalize transition-colors cursor-pointer ${
+                    questionFilter === filterOpt
+                      ? 'bg-blue-900 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {filterOpt} ({filterOpt === 'all' ? questionsList.length : questionsList.filter(q => q.status === filterOpt).length})
+                </button>
+              ))}
+            </div>
+
+            {/* Questions Cards Grid */}
+            {questionsLoading && questionsList.length === 0 ? (
+              <div className="text-center py-12 text-gray-500 text-sm">Loading audience questions...</div>
+            ) : questionsList.length === 0 ? (
+              <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-xl p-6 space-y-3">
+                <span className="text-3xl block">💬</span>
+                <p className="font-bold text-gray-800">No audience questions yet.</p>
+                <p className="text-xs text-gray-500 max-w-sm mx-auto">
+                  When attendees submit questions at <strong className="text-blue-900">yps2026.org/ask</strong>, they will instantly appear here as cards.
+                </p>
+                <a
+                  href="/ask"
+                  target="_blank"
+                  className="inline-block px-4 py-2 bg-blue-900 text-white font-bold text-xs rounded-lg hover:bg-blue-950"
+                >
+                  Submit a Sample Question →
+                </a>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {questionsList
+                  .filter((q) => questionFilter === 'all' || q.status === questionFilter)
+                  .map((q, idx) => {
+                    const isApproved = q.status === 'approved' || q.status === 'displayed';
+                    const isAnswered = q.status === 'answered';
+                    const isPending = q.status === 'pending';
+
+                    return (
+                      <div
+                        key={q.question_id}
+                        className="bg-white border-2 border-gray-200 hover:border-blue-900 rounded-xl p-5 shadow-xs flex flex-col justify-between space-y-4 transition-all"
+                      >
+                        <div className="flex items-start justify-between gap-3 border-b border-gray-100 pb-3">
+                          <span className="bg-gray-100 text-gray-800 font-mono font-bold text-[11px] px-2 py-0.5 rounded">
+                            #{questionsList.length - idx} &bull; Anonymous
+                          </span>
+                          <div>
+                            {isApproved && (
+                              <span className="bg-emerald-100 text-emerald-800 border border-emerald-300 text-[11px] font-bold px-2 py-0.5 rounded-full">
+                                ✓ On Screen
+                              </span>
+                            )}
+                            {isPending && (
+                              <span className="bg-amber-100 text-amber-800 border border-amber-300 text-[11px] font-bold px-2 py-0.5 rounded-full">
+                                ⏳ Pending Review
+                              </span>
+                            )}
+                            {isAnswered && (
+                              <span className="bg-blue-100 text-blue-800 border border-blue-300 text-[11px] font-bold px-2 py-0.5 rounded-full">
+                                ✓ Answered
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        <p className="text-base font-semibold text-gray-900 leading-relaxed flex-1">
+                          &ldquo;{q.question_text}&rdquo;
+                        </p>
+
+                        <div className="pt-2 border-t border-gray-100 flex flex-wrap items-center justify-between gap-2 text-xs">
+                          <span className="text-gray-400 font-mono">
+                            {new Date(q.submitted_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+
+                          <div className="flex items-center gap-1.5">
+                            {isPending && (
+                              <button
+                                onClick={() => handleUpdateQuestionStatus(q.question_id, 'approved')}
+                                disabled={questionActionLoading === q.question_id}
+                                className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded text-xs transition-colors cursor-pointer disabled:opacity-50"
+                              >
+                                {questionActionLoading === q.question_id ? 'Updating...' : '✓ Approve'}
+                              </button>
+                            )}
+
+                            {isApproved && (
+                              <button
+                                onClick={() => handleUpdateQuestionStatus(q.question_id, 'answered')}
+                                disabled={questionActionLoading === q.question_id}
+                                className="px-2.5 py-1 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded text-xs transition-colors cursor-pointer disabled:opacity-50"
+                              >
+                                {questionActionLoading === q.question_id ? 'Updating...' : 'Mark Answered'}
+                              </button>
+                            )}
+
+                            <button
+                              onClick={() => handleUpdateQuestionStatus(q.question_id, 'rejected')}
+                              disabled={questionActionLoading === q.question_id}
+                              className="px-2 py-1 bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-700 font-medium rounded text-xs transition-colors cursor-pointer disabled:opacity-50"
+                              title="Hide question from screen"
+                            >
+                              Hide
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            )}
           </div>
         )}
       </main>

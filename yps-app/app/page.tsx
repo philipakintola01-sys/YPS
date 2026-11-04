@@ -361,6 +361,9 @@ export default function YPSLandingPage() {
             <Link href="/faq" className="text-[13px] font-black uppercase tracking-wider hover:text-[#E5A93C] transition-colors">
               FAQ
             </Link>
+            <Link href="/ask" className="text-[13px] font-black uppercase tracking-wider text-[#EF7AD5] hover:text-[#E5A93C] transition-colors">
+              ASK Q&amp;A
+            </Link>
           </nav>
 
           {/* Action Buttons */}
@@ -460,6 +463,13 @@ export default function YPSLandingPage() {
               className="text-base font-black uppercase tracking-wider py-2 border-b border-white/10 hover:text-[#E5A93C]"
             >
               FAQ
+            </Link>
+            <Link
+              href="/ask"
+              onClick={() => setMobileMenuOpen(false)}
+              className="text-base font-black uppercase tracking-wider py-2 border-b border-white/10 text-[#EF7AD5]"
+            >
+              ASK A QUESTION (ANONYMOUS)
             </Link>
             <a
               href="#register"
@@ -1228,6 +1238,8 @@ export default function YPSLandingPage() {
               </li>
 
               <li><Link href="/faq" className="hover:text-[#E5A93C]">Frequently Asked Questions</Link></li>
+              <li><Link href="/ask" className="text-[#EF7AD5] hover:text-[#E5A93C]">Ask a Question (100% Anonymous)</Link></li>
+              <li><Link href="/ask/screen" className="text-[#23C1B4] hover:text-white">Live Screen Cards (Projector)</Link></li>
             </ul>
           </div>
 
